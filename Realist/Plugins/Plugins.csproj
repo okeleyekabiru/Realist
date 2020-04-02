@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Realist.Data\Realist.Data.csproj" />
+  </ItemGroup>
+
 </Project>
