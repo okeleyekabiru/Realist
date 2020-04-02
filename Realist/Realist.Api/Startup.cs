@@ -39,9 +39,14 @@ namespace Realist.Api
             });
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<DataContext>();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("jwtHandler").Value));
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(opt =>
                 {
+                    opt.SaveToken = true;
                     opt.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
@@ -49,7 +54,10 @@ namespace Realist.Api
                         ValidateAudience = false,
                         ValidateIssuer = false
                     };
+
+
                 });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
