@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Plugins.JwtHandler;
 using Realist.Data.Model;
 using Realist.Data.Services;
 
@@ -37,7 +38,16 @@ namespace Realist.Api
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("RealistConnection"));
             });
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<DataContext>();
+            services.AddScoped<IJwtSecurity, JwtGenrator>();
+            services.AddIdentity<User, IdentityRole>(opt =>
+            {
+                opt.User.RequireUniqueEmail = true;
+                opt.Password.RequireDigit = true;
+                opt.Password.RequireLowercase = true;
+                opt.Password.RequireNonAlphanumeric = true;
+
+
+            }).AddEntityFrameworkStores<DataContext>();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("jwtHandler").Value));
             services.AddAuthentication(x =>
                 {
@@ -69,12 +79,13 @@ namespace Realist.Api
                 }
 
                 app.UseHttpsRedirection();
-
+                app.UseAuthentication();
                 app.UseRouting();
-
                 app.UseAuthorization();
 
-                app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             }
         }
     }

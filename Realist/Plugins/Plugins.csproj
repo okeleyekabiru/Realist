@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Realist.Data\Realist.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Youtube\" />
+  </ItemGroup>
+
 </Project>
