@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Realist.Data.Model;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -11,6 +12,12 @@ namespace Plugins.JwtHandler
 {
   public  class JwtGenrator:IJwtSecurity
     {
+        private readonly IConfiguration _configuration;
+
+        public JwtGenrator(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public JwtModel CreateToken(User user)
         {
             var claim = new List<Claim>
@@ -20,7 +27,7 @@ namespace Plugins.JwtHandler
 
 
             };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("my super secret key"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("jwtHandler").Value));
             var credentials =  new SigningCredentials(key,SecurityAlgorithms.HmacSha256Signature);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
