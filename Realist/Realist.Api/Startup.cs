@@ -5,11 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Realist.Data.Model;
+using Realist.Data.Services;
 
 namespace Realist.Api
 {
@@ -26,6 +30,11 @@ namespace Realist.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<DataContext>(opt =>
+            {
+                opt.UseSqlServer(Configuration.GetConnectionString("RealistConnection"));
+            });
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<DataContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
