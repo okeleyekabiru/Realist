@@ -4,4 +4,17 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="JWT" Version="6.1.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Realist.Data\Realist.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Youtube\" />
+  </ItemGroup>
+
 </Project>
