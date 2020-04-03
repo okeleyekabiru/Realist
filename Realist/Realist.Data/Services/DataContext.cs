@@ -12,6 +12,7 @@ namespace Realist.Data.Services
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public  virtual  DbSet<Reply> Replies { get; set; }
+        public  virtual DbSet<Photo> Photos { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options):base(options)
         {

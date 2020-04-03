@@ -2,10 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>ff55e19d-67b4-41e2-9b2c-d1e3eae8ecc9</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+  
+
+  
+    <PackageReference Include="CloudinaryDotNet" Version="1.10.0" />
+  
+
+  
     <PackageReference Include="JWT" Version="6.1.2" />
+  
+
+  
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
   </ItemGroup>
 

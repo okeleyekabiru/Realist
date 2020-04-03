@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Plugins;
+using Plugins.Cloudinary;
 using Plugins.JwtHandler;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
@@ -51,6 +53,9 @@ namespace Realist.Api
 
 
             }).AddEntityFrameworkStores<DataContext>();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
+            services.AddScoped<IPhoto, PhotoRepo>();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("jwtHandler").Value));
             services.AddAuthentication(x =>
                 {
