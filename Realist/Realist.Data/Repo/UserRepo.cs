@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +35,7 @@ namespace Realist.Data.Repo
 
         public async Task<JwtModel> RegisterUser(User user)
         {
-           var result = await _userManager.CreateAsync(user,user.Password);
+            var result = await _userManager.CreateAsync(user,user.Password);
            if (result.Succeeded)
            {
               var token = _jwtSecurity.CreateToken(user);
@@ -43,8 +44,18 @@ namespace Realist.Data.Repo
                return token;
            }
 
-           return null;
+           return new JwtModel
+           {
+               Error = result.Errors.ElementAt(0).Description
+           };
 
         }
+
+        public async Task<bool> EmailExists(string email)
+        {
+            return  await _userManager.FindByEmailAsync(email) != null;
+        }
+
+      
     }
 }
