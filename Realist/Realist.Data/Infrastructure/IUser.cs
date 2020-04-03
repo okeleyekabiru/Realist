@@ -9,7 +9,7 @@ namespace Realist.Data.Infrastructure
 {
   public  interface IUser
   {
-      User GetCurrentUser(string userId);
+      string GetCurrentUser(string userId);
       Task<JwtModel> RegisterUser(User user);
      Task< bool >EmailExists(string email);
 
