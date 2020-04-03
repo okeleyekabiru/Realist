@@ -55,6 +55,13 @@ namespace Realist.Data.Services
                 .WithMany(o => o.Replies)
                 .HasForeignKey(r => r.CommentId);
         });
+        builder.Entity<UserInfo>(opt =>
+        {
+            opt.HasKey(o => o.Id);
+            opt.HasOne<User>()
+                .WithMany().HasForeignKey(o => o.UserId);
+
+        });
 
         }
     }
