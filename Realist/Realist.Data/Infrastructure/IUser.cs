@@ -11,5 +11,7 @@ namespace Realist.Data.Infrastructure
   {
       User GetCurrentUser(string userId);
       Task<JwtModel> RegisterUser(User user);
+     Task< bool >EmailExists(string email);
+
   }
 }
