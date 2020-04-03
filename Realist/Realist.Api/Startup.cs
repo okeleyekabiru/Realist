@@ -16,7 +16,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Plugins.JwtHandler;
+using Realist.Data.Infrastructure;
 using Realist.Data.Model;
+using Realist.Data.Repo;
 using Realist.Data.Services;
 
 namespace Realist.Api
@@ -38,6 +40,7 @@ namespace Realist.Api
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("RealistConnection"));
             });
+            services.AddScoped<IUser, UserRepo>();
             services.AddScoped<IJwtSecurity, JwtGenrator>();
             services.AddIdentity<User, IdentityRole>(opt =>
             {
@@ -78,14 +81,22 @@ namespace Realist.Api
                     app.UseDeveloperExceptionPage();
                 }
 
-                app.UseHttpsRedirection();
+                // app.UseHttpsRedirection();
                 app.UseAuthentication();
                 app.UseRouting();
                 app.UseAuthorization();
 
+           
+            app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers(); 
 
+                }
+               
+                );
+          
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             }
+
         }
     }
