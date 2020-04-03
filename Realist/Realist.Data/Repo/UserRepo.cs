@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -28,9 +29,9 @@ namespace Realist.Data.Repo
             _signManager = signManager;
             _jwtSecurity = jwtSecurity;
         }
-        public User GetCurrentUser(string userId)
+        public string GetCurrentUser(string userId)
         {
-            throw new NotImplementedException();
+            return _accessor.HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         }
 
         public async Task<JwtModel> RegisterUser(User user)
