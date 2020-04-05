@@ -4,6 +4,7 @@
 
 # Logs
 Logs/
+client_secrets.json
 
 # Generated files
 project.lock.json
