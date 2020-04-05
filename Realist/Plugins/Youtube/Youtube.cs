@@ -32,7 +32,7 @@ namespace Plugins.Youtube
         [STAThread]
         public async Task<UploadVideoResult> UploadVideo(UploadViewModel uploadViewModel, IFormFile videos)
         {
-            CreatePlayList().Wait();
+          
             var filePath = "";
             UserCredential credential;
             using (var stream =
@@ -153,6 +153,7 @@ namespace Plugins.Youtube
         {
             switch (progress.Status)
             {
+                
                 case UploadStatus.Uploading:
                     Console.WriteLine("{0} bytes sent.", progress.BytesSent);
                     break;
@@ -168,6 +169,7 @@ namespace Plugins.Youtube
         void videosInsertRequest_ResponseReceived(Video video)
         {
             VideoId = video.Id;
+       
             Console.WriteLine("Video id '{0}' was successfully uploaded.", video.Id);
         }
 
@@ -208,7 +210,7 @@ namespace Plugins.Youtube
         public async Task CreatePlayList()
         {
             UserCredential credential;
-            using (var stream = new FileStream("client_secrets.json", FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(_env.WebRootPath + "/client_secrets.json", FileMode.Open, FileAccess.Read))
             {
                 credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
