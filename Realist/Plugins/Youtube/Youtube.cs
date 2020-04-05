@@ -119,8 +119,7 @@ namespace Plugins.Youtube
                 // From the API response, extract the playlist ID that identifies the list
                 // of videos uploaded to the authenticated user's channel.
                 var uploadsListId = channel.ContentDetails.RelatedPlaylists.Uploads;
-                retrieve.VideoId = uploadsListId;
-                uploadVideoResult.Add(retrieve);
+               
                 Console.WriteLine("Videos in list {0}", uploadsListId);
 
                 var nextPageToken = "";
@@ -140,6 +139,8 @@ namespace Plugins.Youtube
                         // Print information about each video.
                         Console.WriteLine("{0} ({1})", playlistItem.Snippet.Title,
                             playlistItem.Snippet.ResourceId.VideoId);
+                        retrieve.VideoId = playlistItem.Snippet.ResourceId.VideoId;
+                        uploadVideoResult.Add(retrieve);
                     }
 
                     nextPageToken = playlistItemsListResponse.NextPageToken;
