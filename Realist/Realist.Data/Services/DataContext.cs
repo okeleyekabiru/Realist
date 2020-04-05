@@ -14,6 +14,7 @@ namespace Realist.Data.Services
         public  virtual  DbSet<Reply> Replies { get; set; }
         public  virtual DbSet<Photo> Photos { get; set; }
         public  virtual  DbSet<Videos> Videos { get; set; }
+        public  virtual  DbSet<UserInfo> UserInfo { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options):base(options)
         {
@@ -82,7 +83,15 @@ namespace Realist.Data.Services
             opt.HasKey(o => o.Id);
         });
         builder.Entity<Photo>(opt => opt.HasKey(o => o.Id));
+        builder.Entity<UserInfo>(opt =>
+        {
+            opt.HasKey(r => r.Id);
+            opt.HasOne<User>()
+                .WithMany(o => o.UserInfos)
+                .HasForeignKey(r=>r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+        });
         }
     }
 }
