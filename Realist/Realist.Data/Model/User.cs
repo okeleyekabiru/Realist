@@ -20,6 +20,7 @@ namespace Realist.Data.Model
         public ICollection<Videos> Videos { get; set; }
         public ICollection<Post> Posts { get; set; }
         public  ICollection<Comment> Comments { get; set; }
+        public  ICollection<UserInfo> UserInfos { get; set; }
 
       
     }

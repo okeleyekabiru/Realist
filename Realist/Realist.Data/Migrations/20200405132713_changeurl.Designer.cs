@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Realist.Data.Services;
 
 namespace Realist.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200405132713_changeurl")]
+    partial class changeurl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,12 +197,6 @@ namespace Realist.Data.Migrations
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PostId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("PublicId")
                         .HasColumnType("nvarchar(max)");
 
@@ -216,10 +212,6 @@ namespace Realist.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("PostId1");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Photos");
@@ -231,23 +223,14 @@ namespace Realist.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("Articles")
-                        .HasColumnType("int");
-
                     b.Property<string>("Body")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Category")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("DatePosted")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("News")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
@@ -423,24 +406,14 @@ namespace Realist.Data.Migrations
                     b.Property<DateTime>("DateUploaded")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PostId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PublicId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("VideoPublicId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("PostId1");
 
                     b.HasIndex("UserId");
 
@@ -511,16 +484,6 @@ namespace Realist.Data.Migrations
 
             modelBuilder.Entity("Realist.Data.Model.Photo", b =>
                 {
-                    b.HasOne("Realist.Data.Model.Post", null)
-                        .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Realist.Data.Model.Post", null)
-                        .WithMany("Photos")
-                        .HasForeignKey("PostId1");
-
                     b.HasOne("Realist.Data.Model.User", null)
                         .WithMany("Photo")
                         .HasForeignKey("UserId")
@@ -549,23 +512,12 @@ namespace Realist.Data.Migrations
             modelBuilder.Entity("Realist.Data.Model.UserInfo", b =>
                 {
                     b.HasOne("Realist.Data.Model.User", null)
-                        .WithMany("UserInfos")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Realist.Data.Model.Videos", b =>
                 {
-                    b.HasOne("Realist.Data.Model.Post", null)
-                        .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Realist.Data.Model.Post", null)
-                        .WithMany("Videos")
-                        .HasForeignKey("PostId1");
-
                     b.HasOne("Realist.Data.Model.User", null)
                         .WithMany("Videos")
                         .HasForeignKey("UserId")

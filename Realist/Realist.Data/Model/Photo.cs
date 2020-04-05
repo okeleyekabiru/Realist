@@ -6,11 +6,16 @@ namespace Realist.Data.Model
 {
   public  class Photo
     {
+        public Photo()
+        {
+            Id = Guid.NewGuid();
+        }
         public Guid Id { get; set; }
         public string Url { get; set; }
         public bool IsMain { get; set; } = false;
         public DateTime UploadTime { get; set; }
         public string PublicId { get; set; }
         public string UserId { get; set; }
+        public Guid PostId { get; set; }
     }
 }

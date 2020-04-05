@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
@@ -20,10 +19,10 @@ namespace Plugins.Youtube
     public class Youtube : IYoutube
     {
         private readonly IConfiguration _configuration;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         public static string VideoId { get; set; }
 
-        public Youtube(IConfiguration configuration, IHostingEnvironment env)
+        public Youtube(IConfiguration configuration, IWebHostEnvironment env)
         {
             _configuration = configuration;
             _env = env;

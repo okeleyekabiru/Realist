@@ -56,7 +56,21 @@ namespace Realist.Data.Repo
         {
             return  await _userManager.FindByEmailAsync(email) != null;
         }
+        public async Task<JwtModel> Login(SigninModel user)
+        {
+          
+           var result = await _signManager.PasswordSignInAsync(user.Email,
+                user.Password, user.RememberMe, false);
+           if (result.Succeeded)
+           {
+               var users = await _userManager.FindByEmailAsync(user.Email);
+               return _jwtSecurity.CreateToken(users);
+           }
+           return new JwtModel
+           {
+               Error = result.IsNotAllowed.ToString()
+           };
 
-      
+        }
     }
 }

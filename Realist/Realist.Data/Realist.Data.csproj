@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,9 +7,18 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200403140625_userInfo.cs" />
     <Compile Remove="Migrations\20200403140625_userInfo.Designer.cs" />
+    <Compile Remove="Migrations\20200405140616_includevideo.cs" />
+    <Compile Remove="Migrations\20200405140616_includevideo.Designer.cs" />
+    <Compile Remove="Migrations\20200405140837_includevideo.cs" />
+    <Compile Remove="Migrations\20200405140837_includevideo.Designer.cs" />
+    <Compile Remove="Migrations\20200405141039_includevideo.cs" />
+    <Compile Remove="Migrations\20200405141039_includevideo.Designer.cs" />
+    <Compile Remove="Migrations\20200405142056_includevideo.cs" />
+    <Compile Remove="Migrations\20200405142056_includevideo.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="CloudinaryDotNet" Version="1.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
@@ -24,6 +33,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.5.0" />
+    <PackageReference Include="NLog" Version="4.7.0" />
+    <PackageReference Include="NLog.Config" Version="4.7.0" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
   </ItemGroup>
 

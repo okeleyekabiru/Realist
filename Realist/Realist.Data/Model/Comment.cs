@@ -6,6 +6,10 @@ namespace Realist.Data.Model
 {
    public class Comment
     {
+        public Comment()
+        {
+            Id = Guid.NewGuid();
+        }
         public Guid Id { get; set; }
         public string Body { get; set; }
         public bool IsDeleted { get; set; }
