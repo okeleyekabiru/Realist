@@ -57,7 +57,7 @@ namespace Realist.Api.Controllers
             var model = await  _userContext.RegisterUser(users);
           if (model.Error != null)
           {
-              return BadRequest(new {Error = model.Error}i);
+              return BadRequest(new {Error = model.Error});
           }
 
           return Ok(model);

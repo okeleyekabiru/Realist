@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,12 +13,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Plugins;
 using Plugins.Cloudinary;
 using Plugins.JwtHandler;
+using Plugins.Youtube;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
 using Realist.Data.Repo;
@@ -55,6 +58,7 @@ namespace Realist.Api
             }).AddEntityFrameworkStores<DataContext>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             services.AddScoped<IPhoto, PhotoRepo>();
+            services.AddScoped<IYoutube, Youtube>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("jwtHandler").Value));
             services.AddAuthentication(x =>
@@ -91,12 +95,12 @@ namespace Realist.Api
                 app.UseRouting();
                 app.UseAuthorization();
 
-           
-            app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers(); 
+                app.UseStaticFiles();
+                app.UseEndpoints(endpoints =>
+                    {
+                        endpoints.MapControllers(); 
 
-                }
+                    }
                
                 );
           

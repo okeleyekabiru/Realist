@@ -19,5 +19,9 @@
     <ProjectReference Include="..\RealistTest\RealistTest.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\youtube\" />
+  </ItemGroup>
+
 
 </Project>

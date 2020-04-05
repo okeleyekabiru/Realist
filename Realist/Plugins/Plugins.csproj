@@ -13,6 +13,18 @@
   
 
   
+    <PackageReference Include="Google.Apis" Version="1.45.0" />
+  
+
+  
+    <PackageReference Include="Google.Apis.Auth" Version="1.45.0" />
+  
+
+  
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.45.0.1897" />
+  
+
+  
     <PackageReference Include="JWT" Version="6.1.2" />
   
 
@@ -23,10 +35,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Realist.Data\Realist.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Youtube\" />
   </ItemGroup>
 
 </Project>
