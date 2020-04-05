@@ -169,7 +169,6 @@ namespace Plugins.Youtube
         void videosInsertRequest_ResponseReceived(Video video)
         {
             VideoId = video.Id;
-       
             Console.WriteLine("Video id '{0}' was successfully uploaded.", video.Id);
         }
 
