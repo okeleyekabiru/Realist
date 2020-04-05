@@ -4,7 +4,7 @@
 
 # Logs
 Logs/
-client_secrets.json
+Realist/Realist.Api/wwwroot/client_secrets.json client_secrets.json
 
 # Generated files
 project.lock.json
