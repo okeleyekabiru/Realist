@@ -119,7 +119,7 @@ namespace Plugins.Youtube
                 // From the API response, extract the playlist ID that identifies the list
                 // of videos uploaded to the authenticated user's channel.
                 var uploadsListId = channel.ContentDetails.RelatedPlaylists.Uploads;
-                retrieve.VideoId = channel.Id;
+                retrieve.VideoId = uploadsListId;
                 uploadVideoResult.Add(retrieve);
                 Console.WriteLine("Videos in list {0}", uploadsListId);
 
