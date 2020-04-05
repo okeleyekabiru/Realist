@@ -12,5 +12,6 @@ namespace Realist.Data.Model
         public DateTime UploadTime { get; set; }
         public string PublicId { get; set; }
         public string UserId { get; set; }
+        public Guid PostId { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Plugins;
+using Plugins.JwtHandler;
 using Realist.Api.ViewModels;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
@@ -29,7 +30,10 @@ namespace Realist.Api.Controllers
         
         public async Task<ActionResult> Register([FromForm] UserModel user)
         {
-            user.Email = user.Email.ToLower();
+            JwtModel model;
+            try
+            {
+                user.Email = user.Email.ToLower();
             var verify = await _userContext.EmailExists(user.Email);
             if (verify) return BadRequest(new {Email = "Email Already exist"});
             var photo = _photoAccessor.AddPhoto(user.Photo);
@@ -54,13 +58,21 @@ namespace Realist.Api.Controllers
 
             await _photoContext.UploadImageDb(photoUpload);
             await _photoContext.SaveChanges();
-            var model = await  _userContext.RegisterUser(users);
-          if (model.Error != null)
+             model = await  _userContext.RegisterUser(users);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            if (model.Error != null)
           {
               return BadRequest(new {Error = model.Error});
           }
 
           return Ok(model);
         }
+
+
     }
 }

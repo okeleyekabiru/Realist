@@ -13,6 +13,7 @@ namespace Realist.Data.Services
         public virtual DbSet<Comment> Comments { get; set; }
         public  virtual  DbSet<Reply> Replies { get; set; }
         public  virtual DbSet<Photo> Photos { get; set; }
+        public  virtual  DbSet<Videos> Videos { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options):base(options)
         {
@@ -63,6 +64,24 @@ namespace Realist.Data.Services
                 .WithMany().HasForeignKey(o => o.UserId);
 
         });
+        builder.Entity<Post>(opt =>
+        {
+            opt.HasMany<Photo>()
+                .WithOne()
+                .HasForeignKey(r => r.PostId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<Post>(opt =>
+        {
+            opt.HasMany<Videos>()
+                .WithOne()
+                .HasForeignKey(r => r.PostId).OnDelete(DeleteBehavior.NoAction);
+        });
+        builder.Entity<Videos>(opt =>
+        {
+            opt.HasKey(o => o.Id);
+        });
+        builder.Entity<Photo>(opt => opt.HasKey(o => o.Id));
 
         }
     }
