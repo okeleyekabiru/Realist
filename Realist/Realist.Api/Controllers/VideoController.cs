@@ -30,6 +30,7 @@ namespace Realist.Api.Controllers
             upload.Private = false;
            var videoUpload= await _youTubePlugin.UploadVideo(upload, video);
            return Ok(videoUpload);
+
         }
     }
 }
