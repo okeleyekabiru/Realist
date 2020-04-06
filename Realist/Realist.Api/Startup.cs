@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +22,13 @@ using Microsoft.IdentityModel.Tokens;
 using Plugins;
 using Plugins.Cloudinary;
 using Plugins.JwtHandler;
+using Plugins.Mail;
 using Plugins.Youtube;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
 using Realist.Data.Repo;
 using Realist.Data.Services;
+using Realist.Data.ViewModels;
 
 namespace Realist.Api
 {
@@ -43,11 +46,14 @@ namespace Realist.Api
         {
             services.AddControllers();
             // if any problem occur with autoMapper check here
-            services.AddAutoMapper(GetType().Assembly);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddAutoMapper(typeof(User),typeof(UserReturnModel));
             services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("RealistConnection"));
+
             });
+            services.AddScoped<IMailService, EmailService>();
             services.AddScoped<IUser, UserRepo>();
             services.AddScoped<IJwtSecurity, JwtGenrator>();
             services.AddIdentity<User, IdentityRole>(opt =>
@@ -58,7 +64,7 @@ namespace Realist.Api
                 opt.Password.RequireNonAlphanumeric = true;
 
 
-            }).AddEntityFrameworkStores<DataContext>();
+            }).AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders(); ;
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             services.AddScoped<IPhoto, PhotoRepo>();
             services.AddScoped<IYoutube, Youtube>();
