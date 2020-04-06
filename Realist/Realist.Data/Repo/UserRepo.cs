@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -37,12 +38,14 @@ namespace Realist.Data.Repo
         public async Task<JwtModel> RegisterUser(User user)
         {
             var result = await _userManager.CreateAsync(user,user.Password);
-           if (result.Succeeded)
-           {
+            if (result.Succeeded)
+            {
+                var users = await _userManager.FindByEmailAsync(user.Email);
               var token = _jwtSecurity.CreateToken(user);
                await _signManager.SignInAsync(user, false);
-
-               return token;
+               var emailToken = _jwtSecurity.CreateTokenForEmail(user);
+               token.Code = emailToken;
+                return token;
            }
 
            return new JwtModel
@@ -61,16 +64,36 @@ namespace Realist.Data.Repo
           
            var result = await _signManager.PasswordSignInAsync(user.Email,
                 user.Password, user.RememberMe, false);
+
            if (result.Succeeded)
            {
-               var users = await _userManager.FindByEmailAsync(user.Email);
-               return _jwtSecurity.CreateToken(users);
+               var validateUser =  await _userManager.FindByEmailAsync(user.Email);
+               if (validateUser.EmailConfirmed == false) return new JwtModel
+               {
+                   Error =  "Email Not verified"
+               };
+
+               return _jwtSecurity.CreateToken(validateUser);
            }
            return new JwtModel
            {
                Error = result.IsNotAllowed.ToString()
            };
 
+        }
+
+        public async Task<bool> EmailConfirmation(string code)
+        {
+           
+            var user = await _userManager.FindByIdAsync(_jwtSecurity.ReadToken(code));
+
+            if (user != null)
+            {
+                user.EmailConfirmed = true;
+              await  _userManager.UpdateAsync(user);
+                return true;
+            }
+            return false;
         }
     }
 }
