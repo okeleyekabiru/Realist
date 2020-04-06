@@ -12,6 +12,7 @@ namespace Realist.Api.Controllers
     [ApiController]
     public class VideoController : ControllerBase
     {
+
         private readonly IYoutube _youTubePlugin;
 
         public VideoController(IYoutube youTubePlugin)
