@@ -90,7 +90,7 @@ namespace Plugins.Mail
         public void VerifyEmail(string email,string message)
         {
             string host = _accessor.HttpContext.Request.Host.Value;
-            SendMail(email,  $"Please confirm your account by clicking <a href='{host+ "/api/user/confirmation?Token=" + message}'>here</a>", "Confirm your account");
+            SendMail(email,  $"Please confirm your account by clicking <a href='{"http://"+host+ "/api/user/confirmation?Token=" + message}'>here</a>", "Confirm your account");
         }
     }
 }
