@@ -8,5 +8,10 @@ namespace Plugins.JwtHandler
    public interface IJwtSecurity
    {
        JwtModel CreateToken(User user);
-   }
+
+
+       JwtModel ReadToken(string token);
+
+       JwtModel CreateTokenForEmail(User user);
+    }
 }

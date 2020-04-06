@@ -12,6 +12,7 @@ namespace Realist.Api.Controllers
     [ApiController]
     public class VideoController : ControllerBase
     {
+
         private readonly IYoutube _youTubePlugin;
 
         public VideoController(IYoutube youTubePlugin)
@@ -30,6 +31,7 @@ namespace Realist.Api.Controllers
             upload.Private = false;
            var videoUpload= await _youTubePlugin.UploadVideo(upload, video);
            return Ok(videoUpload);
+
         }
     }
 }
