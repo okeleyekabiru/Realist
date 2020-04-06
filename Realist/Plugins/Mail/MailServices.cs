@@ -61,7 +61,7 @@ namespace Plugins.Mail
               }
               catch (Exception e)
               {
-                  _logger.LogInformation($"Something went wrong, unable to send email to {email} on {DateTime.Now}");
+                  _logger.LogInformation($"Something went wrong, unable to send email to {email} on {DateTime.Now} {e.InnerException?.ToString()??e.Message}");
               }
           }
    
