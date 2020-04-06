@@ -48,6 +48,7 @@ namespace Realist.Api.Controllers
 
                 return BadRequest(ModelState.ValidationState);
             }
+
             JwtModel model;
             User users;
             try
@@ -56,7 +57,8 @@ namespace Realist.Api.Controllers
                 var verify = await _userContext.EmailExists(user.Email);
                 if (verify) return BadRequest(new {Email = "Email Already exist"});
                 users = new User
-                {Email = user.Email,
+                {
+                    Email = user.Email,
                     UserName = user.UserName,
                     Password = user.Password
                 };

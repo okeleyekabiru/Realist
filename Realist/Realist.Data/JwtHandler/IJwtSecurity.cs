@@ -10,7 +10,8 @@ namespace Plugins.JwtHandler
        JwtModel CreateToken(User user);
 
 
-       string ReadToken(string token);
-       string CreateTokenForEmail(User user);
+       JwtModel ReadToken(string token);
+
+       JwtModel CreateTokenForEmail(User user);
     }
 }

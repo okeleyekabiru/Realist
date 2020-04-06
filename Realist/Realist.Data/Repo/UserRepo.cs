@@ -44,7 +44,7 @@ namespace Realist.Data.Repo
               var token = _jwtSecurity.CreateToken(user);
                await _signManager.SignInAsync(user, false);
                var emailToken = _jwtSecurity.CreateTokenForEmail(user);
-               token.Code = emailToken;
+               token.Code = emailToken.Token;
                 return token;
            }
 
@@ -84,8 +84,12 @@ namespace Realist.Data.Repo
 
         public async Task<bool> EmailConfirmation(string code)
         {
-           
-            var user = await _userManager.FindByIdAsync(_jwtSecurity.ReadToken(code));
+            var token = _jwtSecurity.ReadToken(code);
+            if (token.ExpiryDate.CompareTo(DateTime.Now) < 0)
+            {
+                return false;
+            }
+            var user = await _userManager.FindByIdAsync(token.Token);
 
             if (user != null)
             {

@@ -47,16 +47,23 @@ namespace Plugins.JwtHandler
           };
         }
 
-        public string ReadToken(string token)
+        public JwtModel ReadToken(string token)
         {
            
             var handler = new JwtSecurityTokenHandler();
             var decodeToken = handler.ReadJwtToken(token);
-         return decodeToken.Claims?.First().Value;
+        
+                 return new JwtModel
+                 {
+                      ExpiryDate = decodeToken.ValidTo,
+                   Token  = decodeToken.Claims?.First().Value
+                 };
+          
          
         }
 
-        public string CreateTokenForEmail(User user)
+        public
+            JwtModel CreateTokenForEmail(User user)
         {
             var claim = new List<Claim>
             {
@@ -75,7 +82,13 @@ namespace Plugins.JwtHandler
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var returnToken = tokenHandler.WriteToken(token);
+
+            return new JwtModel
+            {
+                ExpiryDate = token.ValidTo,
+                Token = returnToken
+            };
         }
     }
 }
