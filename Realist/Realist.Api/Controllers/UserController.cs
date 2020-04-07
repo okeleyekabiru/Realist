@@ -45,10 +45,7 @@ namespace Realist.Api.Controllers
 
         public async Task<ActionResult> Register([FromBody] UserModel user)
         {
-            _auth.GetDeviceDetails();
-            _auth.GetBrowserId();
-            _auth.GetCurrentUserIp();
-            _auth.GetUserLocation("");
+            
 
             if (!ModelState.IsValid)
             {
