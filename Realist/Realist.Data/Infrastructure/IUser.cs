@@ -16,5 +16,8 @@ namespace Realist.Data.Infrastructure
      Task<bool> EmailConfirmation(string code);
 
 
+
+
+
   }
 }

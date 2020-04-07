@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using DeviceDetectorNET.Results.Device;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +22,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Plugins;
 using Plugins.Cloudinary;
+using Plugins.DeviceAuthentication;
 using Plugins.JwtHandler;
 using Plugins.Mail;
 using Plugins.Youtube;
@@ -53,6 +55,7 @@ namespace Realist.Api
                 opt.UseSqlServer(Configuration.GetConnectionString("RealistConnection"));
 
             });
+            services.AddScoped<IDeviceAuth, DeviceAuthentication>();
             services.AddScoped<IMailService, EmailService>();
             services.AddScoped<IUser, UserRepo>();
             services.AddScoped<IJwtSecurity, JwtGenrator>();

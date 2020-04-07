@@ -18,6 +18,7 @@
     <PackageReference Include="xunit.runners" Version="2.0.0" />
   </ItemGroup>
 
+
   <ItemGroup>
     <ProjectReference Include="..\Plugins\Plugins.csproj" />
     <ProjectReference Include="..\Realist.Api\Realist.Api.csproj" />

@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NLog.Targets;
 using Plugins;
+using Plugins.DeviceAuthentication;
 using Plugins.JwtHandler;
 using Plugins.Mail;
 using Realist.Api.ViewModels;
@@ -25,7 +27,7 @@ namespace Realist.Api.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IMailService _mailService;
         private readonly IMapper _mapper;
-
+        private readonly DeviceAuthentication _auth; 
         public UserController(IUser userContext, IPhotoAccessor photoAccessor, IPhoto photoContext,
             ILogger<UserController> logger,IMailService mailService,IMapper mapper)
         {
@@ -35,6 +37,7 @@ namespace Realist.Api.Controllers
             _logger = logger;
             _mailService = mailService;
             _mapper = mapper;
+            _auth = new DeviceAuthentication(new HttpContextAccessor());
        
         }
 
@@ -42,6 +45,10 @@ namespace Realist.Api.Controllers
 
         public async Task<ActionResult> Register([FromBody] UserModel user)
         {
+            _auth.GetDeviceDetails();
+            _auth.GetBrowserId();
+            _auth.GetCurrentUserIp();
+            _auth.GetUserLocation("");
 
             if (!ModelState.IsValid)
             {

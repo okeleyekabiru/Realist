@@ -9,7 +9,14 @@
   
 
   
+  
+
+  
     <PackageReference Include="CloudinaryDotNet" Version="1.10.0" />
+  
+
+  
+    <PackageReference Include="DeviceDetector.NET.NetCore" Version="3.9.2.2" />
   
 
   
@@ -48,6 +55,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Realist.Data\Realist.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Interop.TAPI3Lib">
+      <HintPath>D:\Users\HP\Downloads\productimg\tapi3_dev\tapi3_dev\obj\Debug\Interop.TAPI3Lib.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
