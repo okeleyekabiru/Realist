@@ -57,6 +57,8 @@ namespace Realist.Api.Controllers
                     return BadRequest(new {Error = "Body can not be empty"});
                 }
                 var model = _mapper.Map<PostModel, Post>(post);
+                model.UserId = userId;
+                model.DatePosted = DateTime.Now;
                 await _postContext.Post(model);
                 if (post.Photo != null)
                 {
@@ -110,6 +112,7 @@ namespace Realist.Api.Controllers
             {
               _logger.LogError(e.InnerException?.ToString()??e.Message);
               _mailService.SendMail(string.Empty,_mailService.ErrorMessage(e.InnerException?.ToString() ?? e.Message),"error");
+              return StatusCode(500, "Internal Server Error");
             }
            
             return Ok(new { Post = "Successfully upload" });
