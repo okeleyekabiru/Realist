@@ -37,10 +37,10 @@ namespace Realist.Data.Repo
 
         public async Task<JwtModel> RegisterUser(User user)
         {
+            var userid = user.Id;
             var result = await _userManager.CreateAsync(user,user.Password);
             if (result.Succeeded)
             {
-                var users = await _userManager.FindByEmailAsync(user.Email);
               var token = _jwtSecurity.CreateToken(user);
                await _signManager.SignInAsync(user, false);
                var emailToken = _jwtSecurity.CreateTokenForEmail(user);
