@@ -121,6 +121,7 @@ namespace RealistTest
             Assert.IsType<ObjectResult>(result);
         }
 
+       
         private Post GetApost()
         {
             return new Post {};

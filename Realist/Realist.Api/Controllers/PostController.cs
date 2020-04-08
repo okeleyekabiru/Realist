@@ -159,7 +159,7 @@ namespace Realist.Api.Controllers
             {
                 if (!ModelState.IsValid || string.IsNullOrEmpty(id.Id))
                 {
-                    return BadRequest(new {Error = "Invalid Id"});
+                    return BadRequest();
                 }
                 model = await _postContext.Get(id.Id);
                 if (model == null) return NotFound();
