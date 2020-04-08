@@ -11,6 +11,11 @@ namespace Realist.Data.Model
         public  string DeviceName { get; set; }
         public  string DeviceImeI { get; set; }
         public string UserId { get; set; }
-      
+        public bool OsSuccess { get; set; }
+        public string OsName { get; set; }
+        public string OsPlatForm { get; set; }
+        public string OsVersion { get; set; }
+        public string OsShortName { get; set; }
+
     }
 }

@@ -9,6 +9,8 @@
         public string DeviceName { get; set; }
         public string DeviceModel { get; set; }
         public string DeviceBrandName { get; set; }
+        public bool IsDesktop { get; set; }
+        public bool IsMobile { get; set; }
 
     }
 }
