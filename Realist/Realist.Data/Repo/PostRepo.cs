@@ -34,6 +34,13 @@ namespace Realist.Data.Repo
 
         }
 
+        public async Task<Post> Get(string postId)
+        {
+            return await _context.Posts.Where(r => r.Id.Equals(Guid.Parse(postId))).Include(r => r.Photos).Include(r => r.Videos)
+                .Include(r => r.Comments).ThenInclude(r => r.Replies).FirstOrDefaultAsync();
+
+        }
+
         public async Task<bool> SaveChanges()
         {
             return await _context.SaveChangesAsync() > 0;
