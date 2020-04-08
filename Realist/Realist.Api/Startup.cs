@@ -72,6 +72,7 @@ namespace Realist.Api
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             services.AddScoped<IPhoto, PhotoRepo>();
             services.AddScoped<IYoutube, Youtube>();
+            services.AddScoped<IVideo, VideoRepo>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("jwtHandler").Value));
             services.AddAuthentication(x =>
