@@ -9,6 +9,7 @@ namespace Realist.Data.Infrastructure
     public interface IPost
     {
         Task Post(Post post);
+        PagedList<Post> GetAll(PaginationModel page);
         Task<bool> SaveChanges();
     }
 }

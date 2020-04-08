@@ -7,10 +7,13 @@ using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Plugins;
 using Plugins.Mail;
 using Plugins.Youtube;
+using Realist.Data;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
 using Realist.Data.ViewModels;
@@ -117,5 +120,36 @@ namespace Realist.Api.Controllers
            
             return Ok(new { Post = "Successfully upload" });
         }
+        [HttpGet("all")]
+        public ActionResult GetAll([FromQuery]PaginationModel page)
+        {
+            PagedList<Post> posts;
+                try
+                {
+
+                     posts = _postContext.GetAll(page);
+                     if (posts.Count < 1) return NoContent();
+                   
+                    var metadata = new
+                    {
+                        posts.TotalCount,
+                        posts.PageSize,
+                        posts.CurrentPage,
+                        posts.TotalPages,
+                        posts.HasNext,
+                        posts.HasPrevious
+                    };
+
+                    Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.InnerException?.ToString()??e.Message);
+                    _mailService.SendMail(string.Empty,_mailService.ErrorMessage(e.InnerException?.ToString() ?? e.Message),"error");
+                    return StatusCode(500, "Internal server error");
+                }
+
+                return Ok(posts);
+        }
+        }
     }
-}
