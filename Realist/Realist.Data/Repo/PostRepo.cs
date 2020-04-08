@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +25,12 @@ namespace Realist.Data.Repo
            
         }
 
-        public async Task<IEnumerable<Post>> GetAll()
+        public PagedList<Post> GetAll(PaginationModel page)
         {
-            return await _context.Posts.Include(r => r.Photos).Include(r => r.Videos).Include(r => r.Comments)
-                .ThenInclude(r => r.Replies).Include(r => r.User).ToListAsync();
+            
+          
+            return  PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos).Include(r => r.Comments)
+                .ThenInclude(r => r.Replies),page.PageNumber,page.PageSize);
 
         }
 
