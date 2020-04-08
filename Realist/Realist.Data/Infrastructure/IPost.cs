@@ -10,6 +10,7 @@ namespace Realist.Data.Infrastructure
     {
         Task Post(Post post);
         PagedList<Post> GetAll(PaginationModel page);
+        Task<Post> Get(string postId);
         Task<bool> SaveChanges();
     }
 }

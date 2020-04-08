@@ -12,6 +12,7 @@ using Plugins;
 using Plugins.Mail;
 using Plugins.Youtube;
 using Realist.Api.Controllers;
+using Realist.Data;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
 using Realist.Data.Repo;
@@ -60,6 +61,77 @@ namespace RealistTest
           var result = await postController.CreatePost(It.IsAny<PostModel>());
           Assert.IsType<ObjectResult>(result);
         }
+        [Fact]
+        public void GetAllTest()
+        {
+            var fileMock = new Mock<IFormFile>();
+            //Setup mock file using a memory stream
+            var content = "Hello World from a Fake File";
+            var fileName = "test.mp4";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write(content);
+            writer.Flush();
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.FileName).Returns(fileName);
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+            var postMockOject = new Mock<IPost>();
+            postMockOject.Setup(r => r.GetAll(It.IsAny<PaginationModel>())).Returns(ValueFunction);
+            var mailSeviceObject = new Mock<IMailService>();
+            var loggerObject = new Mock<ILogger<PostController>>();
+            var userObject = new Mock<IUser>();
+            var photoUploadObject = new Mock<IPhoto>();
+            var youTubeObject = new Mock<IYoutube>();
+            var videoObject = new Mock<IVideo>();
+            var mapper = new Mock<IMapper>();
+            var photoAccessorObject = new Mock<IPhotoAccessor>();
+            var postController = new PostController(postMockOject.Object, mailSeviceObject.Object, loggerObject.Object, userObject.Object, photoUploadObject.Object, youTubeObject.Object, mapper.Object, photoAccessorObject.Object, videoObject.Object);
+            var result = postController.GetAll(It.IsAny<PaginationModel>());
+            Assert.IsType<ObjectResult>(result);
+        }
+        [Fact]
+        public async Task PostAUser()
+        {
+
+            var fileMock = new Mock<IFormFile>();
+            //Setup mock file using a memory stream
+            var content = "Hello World from a Fake File";
+            var fileName = "test.mp4";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write(content);
+            writer.Flush();
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.FileName).Returns(fileName);
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+            var postMockOject = new Mock<IPost>();
+            postMockOject.Setup(r => r.Get("jhgfdsfghjkljhgf")).ReturnsAsync(GetApost);
+            var mailSeviceObject = new Mock<IMailService>();
+            var loggerObject = new Mock<ILogger<PostController>>();
+            var userObject = new Mock<IUser>();
+            var photoUploadObject = new Mock<IPhoto>();
+            var youTubeObject = new Mock<IYoutube>();
+            var videoObject = new Mock<IVideo>();
+            var mapper = new Mock<IMapper>();
+            var photoAccessorObject = new Mock<IPhotoAccessor>();
+            var postController = new PostController(postMockOject.Object, mailSeviceObject.Object, loggerObject.Object, userObject.Object, photoUploadObject.Object, youTubeObject.Object, mapper.Object, photoAccessorObject.Object, videoObject.Object);
+            var result = await postController.Get(It.IsAny<GetPostModel>());
+            Assert.IsType<ObjectResult>(result);
+        }
+
+       
+        private Post GetApost()
+        {
+            return new Post {};
+        }
+
+        private PagedList<Post> ValueFunction()
+        {
+           return  new PagedList<Post>(It.IsAny<List<Post>>(),2,2,2 );
+        }
+
 
         private PhotoUpLoadResult Getupload()
         {
