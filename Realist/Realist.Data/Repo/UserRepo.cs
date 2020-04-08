@@ -30,17 +30,17 @@ namespace Realist.Data.Repo
             _signManager = signManager;
             _jwtSecurity = jwtSecurity;
         }
-        public string GetCurrentUser(string userId)
+        public string GetCurrentUser()
         {
             return _accessor.HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         }
 
         public async Task<JwtModel> RegisterUser(User user)
         {
+            var userid = user.Id;
             var result = await _userManager.CreateAsync(user,user.Password);
             if (result.Succeeded)
             {
-                var users = await _userManager.FindByEmailAsync(user.Email);
               var token = _jwtSecurity.CreateToken(user);
                await _signManager.SignInAsync(user, false);
                var emailToken = _jwtSecurity.CreateTokenForEmail(user);

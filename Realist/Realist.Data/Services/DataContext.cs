@@ -15,6 +15,7 @@ namespace Realist.Data.Services
         public  virtual DbSet<Photo> Photos { get; set; }
         public  virtual  DbSet<Videos> Videos { get; set; }
         public  virtual  DbSet<UserInfo> UserInfo { get; set; }
+        public  virtual  DbSet<BotInfo> BotInfo { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options):base(options)
         {
@@ -92,6 +93,7 @@ namespace Realist.Data.Services
                 .OnDelete(DeleteBehavior.Cascade);
 
         });
+        builder.Entity<BotInfo>(opt => { opt.HasKey(o => o.Id); });
         }
     }
 }

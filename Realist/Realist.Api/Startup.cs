@@ -49,14 +49,15 @@ namespace Realist.Api
             services.AddControllers();
             // if any problem occur with autoMapper check here
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddAutoMapper(typeof(User),typeof(UserReturnModel));
+            services.AddAutoMapper(typeof(User),typeof(UserReturnModel),typeof(Post));
+            services.AddScoped<IPost, PostRepo>();
             services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("RealistConnection"));
 
             });
             services.AddScoped<IDeviceAuth, DeviceAuthentication>();
-            services.AddScoped<IMailService, EmailService>();
+            services.AddTransient<IMailService, EmailService>();
             services.AddScoped<IUser, UserRepo>();
             services.AddScoped<IJwtSecurity, JwtGenrator>();
             services.AddIdentity<User, IdentityRole>(opt =>
@@ -71,6 +72,7 @@ namespace Realist.Api
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             services.AddScoped<IPhoto, PhotoRepo>();
             services.AddScoped<IYoutube, Youtube>();
+            services.AddScoped<IVideo, VideoRepo>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("jwtHandler").Value));
             services.AddAuthentication(x =>

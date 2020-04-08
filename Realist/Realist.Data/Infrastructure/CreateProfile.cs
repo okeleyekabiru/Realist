@@ -15,6 +15,7 @@ namespace Realist.Data.Infrastructure
        {
            CreateMap<User, UserModel>().ReverseMap();
            CreateMap<JwtModel, UserReturnModel>().ReverseMap();
+           CreateMap<Post, PostModel>().ReverseMap();
        }
     }
 }

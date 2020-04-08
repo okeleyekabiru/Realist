@@ -150,6 +150,40 @@ namespace Realist.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Realist.Data.Model.BotInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Producer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProducerUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BotInfo");
+                });
+
             modelBuilder.Entity("Realist.Data.Model.Comment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -386,16 +420,28 @@ namespace Realist.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("BrowserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BrowserVersion")
+                    b.Property<string>("BrowserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DeviceImeI")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DeviceNAme")
+                    b.Property<string>("DeviceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OsName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OsPlatForm")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OsShortName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("OsSuccess")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OsVersion")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -496,6 +542,13 @@ namespace Realist.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Realist.Data.Model.BotInfo", b =>
+                {
+                    b.HasOne("Realist.Data.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Realist.Data.Model.Comment", b =>

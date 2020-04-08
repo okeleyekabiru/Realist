@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Realist.Data.Migrations
 {
-    public partial class initial : Migration
+    public partial class updatedeviceauth : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -161,24 +161,27 @@ namespace Realist.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Photo",
+                name: "BotInfo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    Success = table.Column<bool>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Category = table.Column<string>(nullable: true),
+                    Producer = table.Column<string>(nullable: true),
+                    ProducerUrl = table.Column<string>(nullable: true),
                     Url = table.Column<string>(nullable: true),
-                    IsMain = table.Column<bool>(nullable: false),
-                    UploadTime = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Photo", x => x.Id);
+                    table.PrimaryKey("PK_BotInfo", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Photo_AspNetUsers_UserId",
+                        name: "FK_BotInfo_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,7 +193,10 @@ namespace Realist.Data.Migrations
                     DatePosted = table.Column<DateTime>(nullable: false),
                     Updated = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(nullable: false),
+                    Category = table.Column<int>(nullable: true),
+                    News = table.Column<int>(nullable: true),
+                    Articles = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -204,19 +210,27 @@ namespace Realist.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Videos",
+                name: "UserInfo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Url = table.Column<string>(nullable: true),
-                    DateUploaded = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<string>(nullable: false)
+                    UserLocation = table.Column<string>(nullable: true),
+                    UserIpHost = table.Column<string>(nullable: true),
+                    BrowserId = table.Column<string>(nullable: true),
+                    DeviceName = table.Column<string>(nullable: true),
+                    DeviceImeI = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    OsSuccess = table.Column<bool>(nullable: false),
+                    OsName = table.Column<string>(nullable: true),
+                    OsPlatForm = table.Column<string>(nullable: true),
+                    OsVersion = table.Column<string>(nullable: true),
+                    OsShortName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Videos", x => x.Id);
+                    table.PrimaryKey("PK_UserInfo", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Videos_AspNetUsers_UserId",
+                        name: "FK_UserInfo_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -251,6 +265,74 @@ namespace Realist.Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Photos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Url = table.Column<string>(nullable: true),
+                    IsMain = table.Column<bool>(nullable: false),
+                    UploadTime = table.Column<DateTime>(nullable: false),
+                    PublicId = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false),
+                    PostId = table.Column<Guid>(nullable: false),
+                    PostId1 = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Photos_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Photos_Posts_PostId1",
+                        column: x => x.PostId1,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Photos_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Videos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    DateUploaded = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
+                    PublicId = table.Column<string>(nullable: true),
+                    PostId = table.Column<Guid>(nullable: false),
+                    PostId1 = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Videos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Videos_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Videos_Posts_PostId1",
+                        column: x => x.PostId1,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Videos_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -315,6 +397,11 @@ namespace Realist.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BotInfo_UserId",
+                table: "BotInfo",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_PostId",
                 table: "Comments",
                 column: "PostId");
@@ -325,8 +412,18 @@ namespace Realist.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Photo_UserId",
-                table: "Photo",
+                name: "IX_Photos_PostId",
+                table: "Photos",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photos_PostId1",
+                table: "Photos",
+                column: "PostId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photos_UserId",
+                table: "Photos",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -338,6 +435,21 @@ namespace Realist.Data.Migrations
                 name: "IX_Replies_CommentId",
                 table: "Replies",
                 column: "CommentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserInfo_UserId",
+                table: "UserInfo",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Videos_PostId",
+                table: "Videos",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Videos_PostId1",
+                table: "Videos",
+                column: "PostId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Videos_UserId",
@@ -363,10 +475,16 @@ namespace Realist.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Photo");
+                name: "BotInfo");
+
+            migrationBuilder.DropTable(
+                name: "Photos");
 
             migrationBuilder.DropTable(
                 name: "Replies");
+
+            migrationBuilder.DropTable(
+                name: "UserInfo");
 
             migrationBuilder.DropTable(
                 name: "Videos");

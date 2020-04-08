@@ -20,6 +20,7 @@ namespace Plugins.DeviceAuthentication
             var bot = new BotModel();
             var os = new OsInfo();
             var device = new DeviceDetector(userAgent);
+            
             device.SetCache(new DictionaryCache());
             device.Parse();
             if (device.IsBot())
@@ -58,6 +59,8 @@ namespace Plugins.DeviceAuthentication
 
             }
 
+            client.IsDesktop = device.IsDesktop();
+            client.IsMobile = device.IsMobile();
             deviceInfo.Bot = bot;
             deviceInfo.Client = client;
             deviceInfo.OsInfo = os;

@@ -5,19 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200403140625_userInfo.cs" />
-    <Compile Remove="Migrations\20200403140625_userInfo.Designer.cs" />
-    <Compile Remove="Migrations\20200405140616_includevideo.cs" />
-    <Compile Remove="Migrations\20200405140616_includevideo.Designer.cs" />
-    <Compile Remove="Migrations\20200405140837_includevideo.cs" />
-    <Compile Remove="Migrations\20200405140837_includevideo.Designer.cs" />
-    <Compile Remove="Migrations\20200405141039_includevideo.cs" />
-    <Compile Remove="Migrations\20200405141039_includevideo.Designer.cs" />
-    <Compile Remove="Migrations\20200405142056_includevideo.cs" />
-    <Compile Remove="Migrations\20200405142056_includevideo.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="CloudinaryDotNet" Version="1.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
