@@ -70,6 +70,19 @@ namespace Plugins.DeviceAuthentication
             [DllImport("coredll")]
             public static extern int lineShutdown(IntPtr m_hLineApp);
 
+        internal void Initialize()
+        {
+            throw new NotImplementedException();
         }
-    }
+
+        public Line CreateLine(int i, object interactivevoice, object monitor)
+        {
+            throw new NotImplementedException();
+        }
+        }
+
+        internal class Line
+        {
+        }
+}
 

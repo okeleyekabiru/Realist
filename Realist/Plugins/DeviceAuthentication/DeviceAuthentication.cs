@@ -50,7 +50,7 @@ namespace Plugins.DeviceAuthentication
 
         public string GetUserLocation(string location)
         {
-       
+
             if (string.IsNullOrEmpty(location))
             {
                 return RegionInfo.CurrentRegion.DisplayName;
