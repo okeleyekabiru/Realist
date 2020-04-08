@@ -92,8 +92,8 @@ namespace RealistTest
             var mapper = new Mock<IMapper>();
 
             var userController = new UserController(userMockObject.Object, photoAccessorMockObject.Object, photoMockObject.Object, loggerMockObject.Object, mailServiceObject.Object, mapper.Object);
-            var result = await userController.Confirmation("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0MTAwY2NkYi02MDZkLTQ3MmItYjJlMS0xYWY2ZmRjNjk0MzgiLCJuYmYiOjE1ODYxODAyNDksImV4cCI6MTU4Njc4NTA0OSwiaWF0IjoxNTg2MTgwMjQ5fQ.TQ_NSFJwQaUjT5A6goPdcQMRvZob2zZZiFAPjWF-VjU");
-            Assert.IsType<OkObjectResult>(result);
+            var result = await userController.Confirmation("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJmOGM4MWZiOS1iZTJkLTQ3ZGEtOWM4My1jYWE4ODE5ZDQzMzUiLCJuYmYiOjE1ODYzNTg1NDgsImV4cCI6MTU4Njk2MzM0OCwiaWF0IjoxNTg2MzU4NTQ4fQ.8P6Z-n7IbTwkh2S91p9H9dthr8aH2jS35fg0Y_c-t6Q");
+            Assert.IsType<BadRequestObjectResult>(result);
         }
 
      
