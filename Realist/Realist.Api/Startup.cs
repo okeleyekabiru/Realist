@@ -49,7 +49,7 @@ namespace Realist.Api
             services.AddControllers();
             // if any problem occur with autoMapper check here
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddAutoMapper(typeof(User),typeof(UserReturnModel));
+            services.AddAutoMapper(typeof(User),typeof(UserReturnModel),typeof(Post));
             services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("RealistConnection"));
