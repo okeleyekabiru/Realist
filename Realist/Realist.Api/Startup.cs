@@ -50,13 +50,14 @@ namespace Realist.Api
             // if any problem occur with autoMapper check here
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAutoMapper(typeof(User),typeof(UserReturnModel),typeof(Post));
+            services.AddScoped<IPost, PostRepo>();
             services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("RealistConnection"));
 
             });
             services.AddScoped<IDeviceAuth, DeviceAuthentication>();
-            services.AddScoped<IMailService, EmailService>();
+            services.AddTransient<IMailService, EmailService>();
             services.AddScoped<IUser, UserRepo>();
             services.AddScoped<IJwtSecurity, JwtGenrator>();
             services.AddIdentity<User, IdentityRole>(opt =>
