@@ -151,5 +151,29 @@ namespace Realist.Api.Controllers
 
                 return Ok(posts);
         }
+        [HttpGet("id")]
+        public async Task<ActionResult> Get(GetPostModel id)
+        {
+            Post model;
+            try
+            {
+                if (!ModelState.IsValid || string.IsNullOrEmpty(id.Id))
+                {
+                    return BadRequest(new {Error = "Invalid Id"});
+                }
+                model = await _postContext.Get(id.Id);
+                if (model == null) return NotFound();
+
+
+            }
+            catch (Exception e)
+            {
+               _logger.LogError(e.InnerException?.ToString()??e.Message);
+               _mailService.SendMail(string.Empty, e.InnerException?.ToString()??e.Message,"error");
+               return StatusCode(500, "Internal Server Error");
+            }
+
+            return Ok(model);
+        }
         }
     }
