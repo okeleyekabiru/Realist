@@ -16,11 +16,11 @@ namespace Realist.Data.Repo
         {
             _context = context;
         }
-        public  async Task<bool> Post(Post post)
+        public  async Task Post(Post post)
         {
             await _context.Posts.AddAsync(post);
 
-            return await SaveChanges();
+           
         }
 
         public async Task<bool> SaveChanges()

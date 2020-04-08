@@ -8,7 +8,7 @@ namespace Realist.Data.Infrastructure
 {
     public interface IPost
     {
-        Task<bool> Post(Post post);
+        Task Post(Post post);
         Task<bool> SaveChanges();
     }
 }

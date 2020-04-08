@@ -30,7 +30,7 @@ namespace Realist.Data.Repo
             _signManager = signManager;
             _jwtSecurity = jwtSecurity;
         }
-        public string GetCurrentUser(string userId)
+        public string GetCurrentUser()
         {
             return _accessor.HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         }
