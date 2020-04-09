@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Plugins;
 using Plugins.Mail;
+using Plugins.Redis.Cache;
 using Plugins.Youtube;
 using Realist.Data;
 using Realist.Data.Infrastructure;
@@ -33,8 +35,13 @@ namespace Realist.Api.Controllers
         private readonly IMapper _mapper;
         private readonly IPhotoAccessor _photoAccessor;
         private readonly IVideo _videoContext;
+        private readonly IRedis _redis;
+      
 
-        public PostController(IPost postContext,IMailService mailService,ILogger<PostController> logger,IUser userContext,IPhoto photoUpload,IYoutube youtubeuploader,IMapper mapper,IPhotoAccessor photoAccessor,IVideo videoContext)
+
+        public PostController(IPost postContext, IMailService mailService, ILogger<PostController> logger,
+            IUser userContext, IPhoto photoUpload, IYoutube youtubeuploader, IMapper mapper,
+            IPhotoAccessor photoAccessor, IVideo videoContext, IRedis redis)
         {
             _postContext = postContext;
             _mailService = mailService;
@@ -45,12 +52,12 @@ namespace Realist.Api.Controllers
             _mapper = mapper;
             _photoAccessor = photoAccessor;
             _videoContext = videoContext;
-
+            _redis = redis;
         }
+
         [Authorize(AuthenticationSchemes = "Bearer")]
-        
         [HttpPost("create")]
-        public async Task<ActionResult> CreatePost([FromForm]PostModel post)
+        public async Task<ActionResult> CreatePost([FromForm] PostModel post)
         {
             var userId = _userContext.GetCurrentUser();
             try
@@ -59,13 +66,13 @@ namespace Realist.Api.Controllers
                 {
                     return BadRequest(new {Error = "Body can not be empty"});
                 }
+
                 var model = _mapper.Map<PostModel, Post>(post);
                 model.UserId = userId;
                 model.DatePosted = DateTime.Now;
                 await _postContext.Post(model);
                 if (post.Photo != null)
                 {
-                   
                     var photoUpload = _photoAccessor.AddPhoto(post.Photo);
                     var photo = new Photo
                     {
@@ -89,68 +96,68 @@ namespace Realist.Api.Controllers
                     upload.Type = post.Video.ContentType;
                     upload.CategoryId = String.Empty;
                     upload.Title = post.Video.FileName;
-                    upload.VideoTags = new string[] { "tag1", "tag2" };
+                    upload.VideoTags = new string[] {"tag1", "tag2"};
                     upload.Private = false;
-                    var videoUpload = await _youtubeuploader.UploadVideo(upload,post.Video);
-                   
+                    var videoUpload = await _youtubeuploader.UploadVideo(upload, post.Video);
+
                     if (!string.IsNullOrEmpty(videoUpload.VideoId))
                     {
                         video.DateUploaded = DateTime.Now;
                         video.UserId = userId;
                         video.PublicId = videoUpload.VideoId;
                         video.PostId = model.Id;
-                       await _videoContext.Post(video);
+                        await _videoContext.Post(video);
                     }
                 }
 
                 if (!await _videoContext.SaveChanges())
                 {
-
                     return BadRequest(new {Error = "Error Uploading to database"});
                 }
-
-
             }
             catch (Exception e)
             {
-              _logger.LogError(e.InnerException?.ToString()??e.Message);
-              _mailService.SendMail(string.Empty,_mailService.ErrorMessage(e.InnerException?.ToString() ?? e.Message),"error");
-              return StatusCode(500, "Internal Server Error");
+                _logger.LogError(e.InnerException?.ToString() ?? e.Message);
+                _mailService.SendMail(string.Empty,
+                    _mailService.ErrorMessage(e.InnerException?.ToString() ?? e.Message), "error");
+                return StatusCode(500, "Internal Server Error");
             }
-           
-            return Ok(new { Post = "Successfully upload" });
+
+            return Ok(new {Post = "Successfully upload"});
         }
+
         [HttpGet("all")]
-        public ActionResult GetAll([FromQuery]PaginationModel page)
+        public ActionResult GetAll([FromQuery] PaginationModel page)
         {
             PagedList<Post> posts;
-                try
+            try
+            {
+                posts = _postContext.GetAll(page);
+                if (posts.Count < 1) return NoContent();
+
+                var metadata = new
                 {
+                    posts.TotalCount,
+                    posts.PageSize,
+                    posts.CurrentPage,
+                    posts.TotalPages,
+                    posts.HasNext,
+                    posts.HasPrevious
+                };
 
-                     posts = _postContext.GetAll(page);
-                     if (posts.Count < 1) return NoContent();
-                   
-                    var metadata = new
-                    {
-                        posts.TotalCount,
-                        posts.PageSize,
-                        posts.CurrentPage,
-                        posts.TotalPages,
-                        posts.HasNext,
-                        posts.HasPrevious
-                    };
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.InnerException?.ToString() ?? e.Message);
+                _mailService.SendMail(string.Empty,
+                    _mailService.ErrorMessage(e.InnerException?.ToString() ?? e.Message), "error");
+                return StatusCode(500, "Internal server error");
+            }
 
-                    Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.InnerException?.ToString()??e.Message);
-                    _mailService.SendMail(string.Empty,_mailService.ErrorMessage(e.InnerException?.ToString() ?? e.Message),"error");
-                    return StatusCode(500, "Internal server error");
-                }
-
-                return Ok(posts);
+            return Ok(posts);
         }
+
         [HttpGet("id")]
         public async Task<ActionResult> Get(GetPostModel id)
         {
@@ -161,19 +168,26 @@ namespace Realist.Api.Controllers
                 {
                     return BadRequest();
                 }
-                model = await _postContext.Get(id.Id);
-                if (model == null) return NotFound();
 
-
+                var redis = await _redis.GetRedis<Post>(id.Id);
+                if (redis == null)
+                {
+                    model = await _redis.SetRedis(await _postContext.Get(id.Id), id.Id);
+                    if (model == null) return NotFound();
+                }
+                else
+                {
+                    return Ok(redis);
+                }
             }
             catch (Exception e)
             {
-               _logger.LogError(e.InnerException?.ToString()??e.Message);
-               _mailService.SendMail(string.Empty, e.InnerException?.ToString()??e.Message,"error");
-               return StatusCode(500, "Internal Server Error");
+                _logger.LogError(e.InnerException?.ToString() ?? e.Message);
+                _mailService.SendMail(string.Empty, e.InnerException?.ToString() ?? e.Message, "error");
+                return StatusCode(500, "Internal Server Error");
             }
 
             return Ok(model);
         }
-        }
     }
+}
