@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Plugins;
 using Plugins.Mail;
+using Plugins.Redis.Cache;
 using Plugins.Youtube;
 using Realist.Api.Controllers;
 using Realist.Data;
@@ -57,7 +58,8 @@ namespace RealistTest
             var mapper = new Mock<IMapper>();
             var photoAccessorObject =new Mock<IPhotoAccessor>();
             photoAccessorObject.Setup(r => r.AddPhoto(fileMock.Object)).Returns(Getupload());
-          var postController = new PostController(postMockOject.Object,mailSeviceObject.Object,loggerObject.Object,userObject.Object,photoUploadObject.Object,youTubeObject.Object,mapper.Object,photoAccessorObject.Object,videoObject.Object);
+            var redisObject = new Mock<IRedis>();
+            var postController = new PostController(postMockOject.Object,mailSeviceObject.Object,loggerObject.Object,userObject.Object,photoUploadObject.Object,youTubeObject.Object,mapper.Object,photoAccessorObject.Object,videoObject.Object,redisObject.Object);
           var result = await postController.CreatePost(It.IsAny<PostModel>());
           Assert.IsType<ObjectResult>(result);
         }
@@ -86,7 +88,8 @@ namespace RealistTest
             var videoObject = new Mock<IVideo>();
             var mapper = new Mock<IMapper>();
             var photoAccessorObject = new Mock<IPhotoAccessor>();
-            var postController = new PostController(postMockOject.Object, mailSeviceObject.Object, loggerObject.Object, userObject.Object, photoUploadObject.Object, youTubeObject.Object, mapper.Object, photoAccessorObject.Object, videoObject.Object);
+            var redisObject = new Mock<IRedis>();
+            var postController = new PostController(postMockOject.Object, mailSeviceObject.Object, loggerObject.Object, userObject.Object, photoUploadObject.Object, youTubeObject.Object, mapper.Object, photoAccessorObject.Object, videoObject.Object,redisObject.Object);
             var result = postController.GetAll(It.IsAny<PaginationModel>());
             Assert.IsType<ObjectResult>(result);
         }
@@ -115,8 +118,9 @@ namespace RealistTest
             var youTubeObject = new Mock<IYoutube>();
             var videoObject = new Mock<IVideo>();
             var mapper = new Mock<IMapper>();
+            var redisObject = new Mock<IRedis>();
             var photoAccessorObject = new Mock<IPhotoAccessor>();
-            var postController = new PostController(postMockOject.Object, mailSeviceObject.Object, loggerObject.Object, userObject.Object, photoUploadObject.Object, youTubeObject.Object, mapper.Object, photoAccessorObject.Object, videoObject.Object);
+            var postController = new PostController(postMockOject.Object, mailSeviceObject.Object, loggerObject.Object, userObject.Object, photoUploadObject.Object, youTubeObject.Object, mapper.Object, photoAccessorObject.Object, videoObject.Object,redisObject.Object);
             var result = await postController.Get(It.IsAny<GetPostModel>());
             Assert.IsType<ObjectResult>(result);
         }
