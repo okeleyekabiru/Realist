@@ -135,6 +135,7 @@ namespace RealistTest
 
         private PhotoUpLoadResult Getupload()
         {
+         
             return new PhotoUpLoadResult
             {
                 Url = "ghsJKSLAskdjhbzsjKALS:Cdk",
