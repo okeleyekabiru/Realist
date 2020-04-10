@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Realist.Data.Migrations
 {
-    public partial class updatedeviceauth : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,7 +42,6 @@ namespace Realist.Data.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
                     UserLocation = table.Column<string>(nullable: true),
                     UserIpHost = table.Column<string>(nullable: true),
                     BrowserName = table.Column<string>(nullable: true),
@@ -278,7 +277,7 @@ namespace Realist.Data.Migrations
                     PublicId = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false),
                     PostId = table.Column<Guid>(nullable: false),
-                    PostId1 = table.Column<Guid>(nullable: true)
+                    Updated = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -288,12 +287,6 @@ namespace Realist.Data.Migrations
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Photos_Posts_PostId1",
-                        column: x => x.PostId1,
-                        principalTable: "Posts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Photos_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -311,7 +304,7 @@ namespace Realist.Data.Migrations
                     UserId = table.Column<string>(nullable: false),
                     PublicId = table.Column<string>(nullable: true),
                     PostId = table.Column<Guid>(nullable: false),
-                    PostId1 = table.Column<Guid>(nullable: true)
+                    DateUpdated = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -321,12 +314,6 @@ namespace Realist.Data.Migrations
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Videos_Posts_PostId1",
-                        column: x => x.PostId1,
-                        principalTable: "Posts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Videos_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -417,11 +404,6 @@ namespace Realist.Data.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Photos_PostId1",
-                table: "Photos",
-                column: "PostId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Photos_UserId",
                 table: "Photos",
                 column: "UserId");
@@ -445,11 +427,6 @@ namespace Realist.Data.Migrations
                 name: "IX_Videos_PostId",
                 table: "Videos",
                 column: "PostId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Videos_PostId1",
-                table: "Videos",
-                column: "PostId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Videos_UserId",

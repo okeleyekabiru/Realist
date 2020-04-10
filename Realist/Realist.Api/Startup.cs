@@ -25,6 +25,7 @@ using Plugins.Cloudinary;
 using Plugins.DeviceAuthentication;
 using Plugins.JwtHandler;
 using Plugins.Mail;
+using Plugins.Redis.Cache;
 using Plugins.Youtube;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
@@ -74,6 +75,12 @@ namespace Realist.Api
             services.AddScoped<IYoutube, Youtube>();
             services.AddScoped<IVideo, VideoRepo>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.AddScoped<IRedis, Redis>();
+            services.AddStackExchangeRedisCache(opt =>
+            {
+                opt.Configuration = "localhost:6379";
+
+            });
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("jwtHandler").Value));
             services.AddAuthentication(x =>
                 {

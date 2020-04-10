@@ -232,11 +232,11 @@ namespace Realist.Data.Migrations
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PostId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("PublicId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("UploadTime")
                         .HasColumnType("datetime2");
@@ -251,8 +251,6 @@ namespace Realist.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
-
-                    b.HasIndex("PostId1");
 
                     b.HasIndex("UserId");
 
@@ -373,9 +371,6 @@ namespace Realist.Data.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -466,13 +461,13 @@ namespace Realist.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DateUploaded")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PostId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PublicId")
@@ -485,8 +480,6 @@ namespace Realist.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
-
-                    b.HasIndex("PostId1");
 
                     b.HasIndex("UserId");
 
@@ -565,14 +558,10 @@ namespace Realist.Data.Migrations
             modelBuilder.Entity("Realist.Data.Model.Photo", b =>
                 {
                     b.HasOne("Realist.Data.Model.Post", null)
-                        .WithMany()
+                        .WithMany("Photos")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("Realist.Data.Model.Post", null)
-                        .WithMany("Photos")
-                        .HasForeignKey("PostId1");
 
                     b.HasOne("Realist.Data.Model.User", null)
                         .WithMany("Photo")
@@ -610,14 +599,10 @@ namespace Realist.Data.Migrations
             modelBuilder.Entity("Realist.Data.Model.Videos", b =>
                 {
                     b.HasOne("Realist.Data.Model.Post", null)
-                        .WithMany()
+                        .WithMany("Videos")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("Realist.Data.Model.Post", null)
-                        .WithMany("Videos")
-                        .HasForeignKey("PostId1");
 
                     b.HasOne("Realist.Data.Model.User", null)
                         .WithMany("Videos")

@@ -33,6 +33,7 @@ public    class PhotoAccessor:IPhotoAccessor
                             File = new FileDescription(file.FileName, stream),
                             Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face")
                         };
+                        
                         uploadResult = _cloudinary.Upload(uploadParamns);
                     }
                 }
@@ -54,6 +55,8 @@ public    class PhotoAccessor:IPhotoAccessor
                 var result = _cloudinary.Destroy(deleteParams);
                 return result.Result == "ok" ? result.Result : null;
             }
-        }
+
+           
+    }
 }
 

@@ -6,6 +6,7 @@ namespace Plugins
     {
         PhotoUpLoadResult AddPhoto(IFormFile file);
         string DeletePhoto(string publicId);
+        
     }
 }
 

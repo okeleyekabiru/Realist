@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Plugins.JwtHandler;
+using Realist.Api.ViewModels;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
 using Realist.Data.Services;
@@ -35,23 +36,31 @@ namespace Realist.Data.Repo
             return _accessor.HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         }
 
-        public async Task<JwtModel> RegisterUser(User user)
+        public async Task<Tuple<JwtModel,string>> RegisterUser(UserModel user)
         {
-            var userid = user.Id;
-            var result = await _userManager.CreateAsync(user,user.Password);
+            var users = new User
+            {
+            UserName =  user.Email,
+            Email = user.Email
+            };
+           var result = await _userManager.CreateAsync(users,user.Password);
             if (result.Succeeded)
             {
-              var token = _jwtSecurity.CreateToken(user);
-               await _signManager.SignInAsync(user, false);
-               var emailToken = _jwtSecurity.CreateTokenForEmail(user);
+              var token = _jwtSecurity.CreateToken(users);
+               await _signManager.SignInAsync(users, false);
+               var emailToken = _jwtSecurity.CreateTokenForEmail(users);
                token.Code = emailToken.Token;
-                return token;
+                return new Tuple<JwtModel, string>(token,users.Id);
            }
 
-           return new JwtModel
-           {
-               Error = result.Errors.ElementAt(0).Description
-           };
+            return new Tuple<JwtModel, string>(new JwtModel
+            {
+                Error = result.Errors.ElementAt(0).Description
+
+            },users.Id
+                    );
+                
+          
 
         }
 
@@ -61,14 +70,14 @@ namespace Realist.Data.Repo
         }
         public async Task<JwtModel> Login(SigninModel user)
         {
-          
-           var result = await _signManager.PasswordSignInAsync(user.Email,
+            var result = await _signManager.PasswordSignInAsync(user.Email,
                 user.Password, user.RememberMe, false);
 
            if (result.Succeeded)
            {
-               var validateUser =  await _userManager.FindByEmailAsync(user.Email);
-               if (validateUser.EmailConfirmed == false) return new JwtModel
+               var validateUser = await _userManager.FindByEmailAsync(user.Email);
+
+                if (validateUser.EmailConfirmed == false) return new JwtModel
                {
                    Error =  "Email Not verified"
                };

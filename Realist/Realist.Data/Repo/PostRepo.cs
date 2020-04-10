@@ -20,9 +20,10 @@ namespace Realist.Data.Repo
         }
         public  async Task Post(Post post)
         {
+         
             await _context.Posts.AddAsync(post);
+       
 
-           
         }
 
         public PagedList<Post> GetAll(PaginationModel page)
@@ -36,9 +37,21 @@ namespace Realist.Data.Repo
 
         public async Task<Post> Get(string postId)
         {
-            return await _context.Posts.Where(r => r.Id.Equals(Guid.Parse(postId))).Include(r => r.Photos).Include(r => r.Videos)
-                .Include(r => r.Comments).ThenInclude(r => r.Replies).FirstOrDefaultAsync();
+            return await _context.Posts.Include(r => r.Photos).Include(r => r.Videos)
+                .Include(r => r.Comments).ThenInclude(r => r.Replies).Where(r => r.Id.Equals(Guid.Parse(postId))).FirstOrDefaultAsync();
 
+        }
+
+        public async Task<Post> GetPost(string postId)
+        {
+           var result = await _context.Posts.Where(r => r.Id.Equals(Guid.Parse(postId))).FirstOrDefaultAsync();
+        return   result;
+        }
+
+        public Guid Update(Post post)
+        {
+            _context.Update(post);
+            return post.Id;
         }
 
         public async Task<bool> SaveChanges()
