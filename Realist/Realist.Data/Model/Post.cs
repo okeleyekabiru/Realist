@@ -6,9 +6,10 @@ namespace Realist.Data.Model
 {
     public class Post
     {
+    
         public Post()
         {
-            Id = Guid.NewGuid();
+            DatePosted = DateTime.Now;
         }
         public Guid Id { get; set; }
         public string Body { get; set; }

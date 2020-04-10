@@ -68,17 +68,15 @@ namespace Realist.Data.Services
         });
         builder.Entity<Post>(opt =>
         {
-            opt.HasMany<Photo>()
+            opt.HasMany(o => o.Photos)
+                .WithOne().HasForeignKey(r => r.PostId)
+                .OnDelete(DeleteBehavior.NoAction);
+            opt.HasMany(o => o.Videos)
                 .WithOne()
-                .HasForeignKey(r => r.PostId)
+                .HasForeignKey(o => o.PostId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
-        builder.Entity<Post>(opt =>
-        {
-            opt.HasMany<Videos>()
-                .WithOne()
-                .HasForeignKey(r => r.PostId).OnDelete(DeleteBehavior.NoAction);
-        });
+     
         builder.Entity<Videos>(opt =>
         {
             opt.HasKey(o => o.Id);

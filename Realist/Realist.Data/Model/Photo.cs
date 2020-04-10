@@ -17,5 +17,6 @@ namespace Realist.Data.Model
         public string PublicId { get; set; }
         public string UserId { get; set; }
         public Guid PostId { get; set; }
+        public DateTime Updated { get; set; }
     }
 }

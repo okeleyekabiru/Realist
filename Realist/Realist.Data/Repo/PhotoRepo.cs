@@ -23,9 +23,21 @@ namespace Realist.Data.Repo
             await _context.Photos.AddAsync(photo);
         }
 
+        public async Task<string> FindPhotoId(string postId, string photoId)
+        {
+            return await _context.Photos.Where(r => r.PostId.Equals(Guid.Parse(postId)) && r.PublicId.Equals(photoId))
+                .Select(r => r.PublicId).FirstOrDefaultAsync();
+        }
+
         public void DeleteImageFromDb(Photo photo)
         {
             _context.Photos.Remove(photo);
+        }
+
+        public Task Update(Photo photo)
+        {
+            _context.Entry(photo).State = EntityState.Modified;
+                return Task.CompletedTask;
         }
 
         public async Task<bool> SaveChanges()

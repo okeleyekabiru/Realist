@@ -26,7 +26,7 @@ namespace RealistTest
         public async  Task Register_pass()
         {
             var userMockObject = new Mock<IUser>();
-            userMockObject.Setup(r => r.RegisterUser(It.IsAny<User>())).ReturnsAsync(GetJwtModel());
+            userMockObject.Setup(r => r.RegisterUser(It.IsAny<UserModel>())).ReturnsAsync(GetJwtModel());
             var photoAccessorMockObject = new Mock<IPhotoAccessor>();
             photoAccessorMockObject.Setup(r => r.AddPhoto(Photo)).Returns(GetUpload());
             var photoMockObject = new Mock<IPhoto>();
@@ -48,7 +48,7 @@ namespace RealistTest
         public async Task Login_Pass()
         {
             var userMockObject = new Mock<IUser>();
-            userMockObject.Setup(r => r.Login(It.IsAny<SigninModel>())).ReturnsAsync(GetJwtModel());
+            userMockObject.Setup(r => r.Login(It.IsAny<SigninModel>())).Returns(GetJwtModel());
             var photoAccessorMockObject = new Mock<IPhotoAccessor>();
             photoAccessorMockObject.Setup(r => r.AddPhoto(Photo)).Returns(GetUpload());
             var photoMockObject = new Mock<IPhoto>();
@@ -64,13 +64,28 @@ namespace RealistTest
             Assert.IsType<OkObjectResult>(result);
         }
 
+        private Func<Tuple<JwtModel, string>> GetJwtModel()
+        {
+          return  new Func<Tuple<JwtModel, string>>(Target);
+        }
+
+        private Tuple<JwtModel, string> Target()
+        {
+              return new Tuple<JwtModel, string>(new JwtModel
+            {
+                Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI5Njg5OTBiOC00YTk5LTRjMjMtODkxMi01Yzg5YzE4MzdjMjciLCJuYmYiOjE1ODY0OTgzNjgsImV4cCI6MTU4NzEwMzE2OCwiaWF0IjoxNTg2NDk4MzY4fQ.5t_HLyxl1Dh5kxaff0U1pTWe19CgXKqhUoFWlQ5HvlI",
+                ExpiryDate = DateTime.Now
+            }, "dshjakl;sskfjdsj");
+        }
+
+
         private UserModel GetUserModel()
         {
             return new UserModel
             {
                 Email = "kabiotobiano@gmail.com",
                 Password = "Abiola12345%",
-                UserName = "kabiotobiano@gmail.com"
+            
 
             };
         }
@@ -104,13 +119,6 @@ namespace RealistTest
            return  new PhotoUpLoadResult();
         }
 
-        private JwtModel GetJwtModel()
-        {
-            return new JwtModel
-            {
-                Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0MTAwY2NkYi02MDZkLTQ3MmItYjJlMS0xYWY2ZmRjNjk0MzgiLCJuYmYiOjE1ODYxODAyNDksImV4cCI6MTU4Njc4NTA0OSwiaWF0IjoxNTg2MTgwMjQ5fQ.TQ_NSFJwQaUjT5A6goPdcQMRvZob2zZZiFAPjWF-VjU",
-                ExpiryDate = DateTime.Now
-            };
-        }
+       
     }
 }

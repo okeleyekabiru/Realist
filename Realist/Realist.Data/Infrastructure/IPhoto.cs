@@ -9,7 +9,9 @@ namespace Realist.Data.Infrastructure
   public  interface  IPhoto
   {
       Task UploadImageDb(Photo photo);
+      Task<string> FindPhotoId(string postId , string photoId);
       void DeleteImageFromDb(Photo photo);
+      Task Update(Photo photo);
       Task<bool> SaveChanges();
       Task<bool> FindUserImage(string userId);
   }
