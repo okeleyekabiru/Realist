@@ -7,10 +7,7 @@ namespace Realist.Data.Model
 {
   public  class Videos
     {
-        public Videos()
-        {
-            Id = Guid.NewGuid();
-        }
+      
         [Key]
         public Guid Id { get; set; }
         public DateTime DateUploaded { get; set; }

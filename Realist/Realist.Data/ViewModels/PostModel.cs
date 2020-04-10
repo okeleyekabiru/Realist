@@ -10,7 +10,6 @@ namespace Realist.Data.ViewModels
   public  class PostModel
     {
         public string Id { get; set; }
-        [Required]
         public string Body { get; set; }
         public IFormFile Photo { get; set; }
         public IFormFile  Video { get; set; }

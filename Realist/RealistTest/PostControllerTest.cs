@@ -49,12 +49,12 @@ namespace RealistTest
             var userObject = new Mock<IUser>();
             userObject.Setup(r => r.GetCurrentUser()).Returns(Guid.NewGuid().ToString);
             var photoUploadObject = new  Mock<IPhoto>();
-            photoUploadObject.Setup(r => r.UploadImageDb(It.IsAny<Photo>())).Returns(Task.CompletedTask);
+            photoUploadObject.Setup(r => r.UploadImageDb(It.IsAny<Photo>())).ReturnsAsync(Guid.NewGuid());
             var youTubeObject = new Mock<IYoutube>();
             youTubeObject.Setup(r => r.UploadVideo(It.IsAny<UploadViewModel>(), fileMock.Object))
                 .ReturnsAsync(GetUpload());
             var videoObject = new Mock<IVideo>();
-            videoObject.Setup(r => r.Post(It.IsAny<Videos>())).Returns(Task.CompletedTask);
+            videoObject.Setup(r => r.Post(It.IsAny<Videos>())).ReturnsAsync(Guid.NewGuid);
             var mapper = new Mock<IMapper>();
             var photoAccessorObject =new Mock<IPhotoAccessor>();
             photoAccessorObject.Setup(r => r.AddPhoto(fileMock.Object)).Returns(Getupload());

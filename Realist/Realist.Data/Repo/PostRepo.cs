@@ -42,9 +42,15 @@ namespace Realist.Data.Repo
 
         }
 
+        public async Task<Post> GetPost(string postId)
+        {
+           var result = await _context.Posts.Where(r => r.Id.Equals(Guid.Parse(postId))).FirstOrDefaultAsync();
+        return   result;
+        }
+
         public Guid Update(Post post)
         {
-            _context.Entry(post).State = EntityState.Modified;
+            _context.Update(post);
             return post.Id;
         }
 

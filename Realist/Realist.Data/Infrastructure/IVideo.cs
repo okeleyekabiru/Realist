@@ -10,8 +10,8 @@ namespace Realist.Data.Infrastructure
 {
  public interface  IVideo
  {
-     Task Post(Videos video);
-     Task<string> GetVideoPublicId(string postId, string videid);
+     Task<Guid> Post(Videos video);
+     Task<Videos> GetVideoPublicId(string postId, string videid);
      Task Update(Videos videos);
      Task<bool> SaveChanges();
  }

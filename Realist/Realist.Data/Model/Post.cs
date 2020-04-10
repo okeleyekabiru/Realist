@@ -7,10 +7,7 @@ namespace Realist.Data.Model
     public class Post
     {
     
-        public Post()
-        {
-            DatePosted = DateTime.Now;
-        }
+      
         public Guid Id { get; set; }
         public string Body { get; set; }
         public DateTime DatePosted { get; set; }

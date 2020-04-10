@@ -157,9 +157,12 @@ namespace Realist.Api.Controllers
             var userId = _userContext.GetCurrentUser();
             try
             {
-                var model = _mapper.Map<PostModel, Post>(post);
+                var posts = await _postContext.Get(post.Id);
+                post.Body ??= posts.Body;
+                var model = _mapper.Map(post, posts);
+                
                 var postUpload = await post.UpdatePost(userId, _photoUpload, _photoAccessor, _youtubeuploader, _videoContext,
-                    _postContext, model);
+                    _postContext, model,_mapper);
                 if (!postUpload)
                 {
                     return BadRequest(new { Error = "Error Uploading to database" });

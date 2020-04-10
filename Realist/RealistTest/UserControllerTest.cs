@@ -30,7 +30,7 @@ namespace RealistTest
             var photoAccessorMockObject = new Mock<IPhotoAccessor>();
             photoAccessorMockObject.Setup(r => r.AddPhoto(Photo)).Returns(GetUpload());
             var photoMockObject = new Mock<IPhoto>();
-            photoMockObject.Setup(r => r.UploadImageDb(It.IsAny<Photo>())).Returns(Task.CompletedTask);
+            photoMockObject.Setup(r => r.UploadImageDb(It.IsAny<Photo>())).ReturnsAsync(Guid.NewGuid());
             var loggerMockObject = new Mock<ILogger<UserController>>();
             var mailServiceObject =  new Mock<IMailService>();
             mailServiceObject.Setup(
@@ -52,7 +52,7 @@ namespace RealistTest
             var photoAccessorMockObject = new Mock<IPhotoAccessor>();
             photoAccessorMockObject.Setup(r => r.AddPhoto(Photo)).Returns(GetUpload());
             var photoMockObject = new Mock<IPhoto>();
-            photoMockObject.Setup(r => r.UploadImageDb(It.IsAny<Photo>())).Returns(Task.CompletedTask);
+            photoMockObject.Setup(r => r.UploadImageDb(It.IsAny<Photo>())).ReturnsAsync(Guid.NewGuid());
             var loggerMockObject = new Mock<ILogger<UserController>>();
             var mailServiceObject = new Mock<IMailService>();
             mailServiceObject.Setup(
@@ -60,7 +60,7 @@ namespace RealistTest
             var mapper = new Mock<IMapper>();
 
             var userController = new UserController(userMockObject.Object, photoAccessorMockObject.Object, photoMockObject.Object, loggerMockObject.Object, mailServiceObject.Object, mapper.Object);
-            var result = await userController.Login(new SigninModel());
+            var result = await userController.Login(It.IsAny<SigninModel>());
             Assert.IsType<OkObjectResult>(result);
         }
 
@@ -99,7 +99,7 @@ namespace RealistTest
             var photoAccessorMockObject = new Mock<IPhotoAccessor>();
             photoAccessorMockObject.Setup(r => r.AddPhoto(Photo)).Returns(GetUpload());
             var photoMockObject = new Mock<IPhoto>();
-            photoMockObject.Setup(r => r.UploadImageDb(It.IsAny<Photo>())).Returns(Task.CompletedTask);
+            photoMockObject.Setup(r => r.UploadImageDb(It.IsAny<Photo>())).ReturnsAsync(Guid.NewGuid());
             var loggerMockObject = new Mock<ILogger<UserController>>();
             var mailServiceObject = new Mock<IMailService>();
             mailServiceObject.Setup(
