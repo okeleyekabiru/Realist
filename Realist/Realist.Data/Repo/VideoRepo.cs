@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
 using Realist.Data.Services;
+using Realist.Data.ViewModels;
 
 namespace Realist.Data.Repo
 {
@@ -26,6 +27,12 @@ namespace Realist.Data.Repo
             video.DateUploaded = DateTime.Now;
             await _context.AddAsync(video);
             return video.Id;
+        }
+
+        public  Task Delete(Videos video)
+        {
+            _context.Videos.Remove(video);
+            return  Task.CompletedTask;
         }
 
         public async Task<Videos> GetVideoPublicId(string postId, string videoId)

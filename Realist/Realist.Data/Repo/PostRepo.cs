@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
 using Realist.Data.Services;
+using Realist.Data.ViewModels;
 
 namespace Realist.Data.Repo
 {
-   public class PostRepo:IPost
+   
+    public class PostRepo:IPost
     {
         private readonly DataContext _context;
 
@@ -18,6 +20,18 @@ namespace Realist.Data.Repo
         {
             _context = context;
         }
+
+
+     
+
+        public  Task Delete(Post post)
+        {
+         
+            _context.Posts.Remove(post);
+        
+return  Task.CompletedTask;
+        }
+
         public  async Task Post(Post post)
         {
          
@@ -52,6 +66,23 @@ namespace Realist.Data.Repo
         {
             _context.Update(post);
             return post.Id;
+        }
+
+        public async Task<List<Keys>> GetKeys(Guid postId)
+        {
+
+           return await _context.Posts.Include(e => e.Photos).Include(e => e.Videos)
+                .Where(r => r.Id.Equals(postId)).Select(e => new List<Keys>
+                {
+                 new Keys
+                 {
+                     PhotoId =  e.Photos.FirstOrDefault().PublicId,
+                     VideoId =  e.Videos.FirstOrDefault().PublicId
+                 }  
+
+                }).FirstOrDefaultAsync();
+
+
         }
 
         public async Task<bool> SaveChanges()
