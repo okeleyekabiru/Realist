@@ -18,6 +18,13 @@ namespace Realist.Data.Repo
         {
             _context = context;
         }
+
+        public Task Delete(Photo photo)
+        {
+            _context.Photos.Remove(photo);
+            return  Task.CompletedTask;
+        }
+
         public async Task<Guid> UploadImageDb(Photo photo)
         {
             photo.Id = Guid.NewGuid();

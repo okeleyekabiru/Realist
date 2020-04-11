@@ -179,5 +179,32 @@ namespace Realist.Api.Controllers
 
             return Ok(new { Post = "Successfully updated" });
         }
+        [HttpDelete]
+        public async Task<ActionResult> Delete(PostModel post)
+        {
+            ReturnResult result;
+            try
+            {
+                var userId = _userContext.GetCurrentUser();
+                if (string.IsNullOrEmpty(post.Id)) return BadRequest(new { Error = "Invalid data" });
+                var posts = await _postContext.Get(postId:post.Id);
+                result = await posts.Delete(userId, _photoUpload, _photoAccessor, _youtubeuploader, _videoContext,
+                    _postContext);
+
+                    
+                if (result.Succeeded)
+                {
+                    return Ok(new {Success = "Entity as been successfully deleted"});
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.InnerException?.ToString()??e.Message);
+                _mailService.SendMail(string.Empty, e.InnerException?.ToString() ?? e.Message,"error");
+                return StatusCode(500, "Internal server error");
+            }
+
+            return BadRequest(new {Error = result });
+        }
     }
 }

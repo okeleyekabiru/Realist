@@ -29,11 +29,12 @@ namespace Realist.Data.Services
         {
             opt.HasKey(o => o.Id);
             opt.HasMany(o => o.Photo)
-                .WithOne().IsRequired()
+                .WithOne()
                 .HasForeignKey(r => r.UserId);
             opt.HasMany(o => o.Videos)
-                .WithOne().IsRequired()
+                .WithOne()
                 .HasForeignKey(r => r.UserId)
+               
                 ;
 
         });
@@ -41,7 +42,7 @@ namespace Realist.Data.Services
         {
             opt.HasKey(o => o.Id);
             opt.HasMany(o => o.Comments).WithOne();
-            opt.HasOne(o => o.User).WithMany(o => o.Posts).IsRequired()
+            opt.HasOne(o => o.User).WithMany(o => o.Posts)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -49,7 +50,7 @@ namespace Realist.Data.Services
         builder.Entity<Comment>(opt =>
         {
             opt.HasMany(o => o.Replies)
-                .WithOne().IsRequired()
+                .WithOne()
                 .HasForeignKey(r => r.CommentId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
@@ -57,7 +58,7 @@ namespace Realist.Data.Services
         {
             opt.HasOne(o => o.Comment)
                 .WithMany(o => o.Replies)
-                .HasForeignKey(r => r.CommentId);
+                .HasForeignKey(r => r.CommentId).OnDelete(DeleteBehavior.Cascade);
         });
         builder.Entity<UserInfo>(opt =>
         {
@@ -70,11 +71,11 @@ namespace Realist.Data.Services
         {
             opt.HasMany(o => o.Photos)
                 .WithOne().HasForeignKey(r => r.PostId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
             opt.HasMany(o => o.Videos)
                 .WithOne()
                 .HasForeignKey(o => o.PostId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
         });
      
         builder.Entity<Videos>(opt =>

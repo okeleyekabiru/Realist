@@ -5,6 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200411114603_update-post.cs" />
+    <Compile Remove="Migrations\20200411114603_update-post.Designer.cs" />
+    <Compile Remove="Migrations\20200411115545_update-post.cs" />
+    <Compile Remove="Migrations\20200411115545_update-post.Designer.cs" />
+    <Compile Remove="Migrations\20200411115836_update-post.cs" />
+    <Compile Remove="Migrations\20200411115836_update-post.Designer.cs" />
+    <Compile Remove="Migrations\20200411123318_updatedelete.cs" />
+    <Compile Remove="Migrations\20200411123318_updatedelete.Designer.cs" />
+    <Compile Remove="Migrations\20200411123358_updatedelete.cs" />
+    <Compile Remove="Migrations\20200411123358_updatedelete.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="CloudinaryDotNet" Version="1.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
