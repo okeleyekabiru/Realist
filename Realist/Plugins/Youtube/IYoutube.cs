@@ -11,7 +11,7 @@ namespace Plugins.Youtube
        Task<UploadVideoResult> UploadVideo(UploadViewModel uploadViewModel,IFormFile video);
        Task<List<UploadVideoResult>> RetreiveVideo(string videoId);
        Task<UploadVideoResult> UpdateVideo(string videoId, IFormFile video, UploadViewModel uploadViewModel);
-       UploadVideoResult DeleteVideo(string id);
+       Task<bool> DeleteVideo(string id);
       string CopyToFolder(IFormFile video);
       void DeleteFromFolder(string path);
       Task CreatePlayList();
