@@ -8,6 +8,7 @@ using Plugins.Youtube;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
 using Realist.Data.ViewModels;
+using TAPI3Lib;
 
 namespace Realist.Data.Extensions
 {
@@ -127,6 +128,36 @@ namespace Realist.Data.Extensions
             return await videoContext.SaveChanges();
 
 
+        }
+
+        public static async Task<ReturnResult> Delete(this Post post, string userId, IPhoto photoUploads, IPhotoAccessor photoAccessor, IYoutube youtubeuploader, IVideo videoContext, IPost postContext)
+        {
+
+            var keys = await postContext.GetKeys(post.Id);
+            var videoResult = await youtubeuploader.DeleteVideo(keys[0].VideoId);
+            var imageResult =  photoAccessor.DeletePhoto(keys[0].PhotoId);
+            if (videoResult && imageResult.ToLower().Equals("ok"))
+            {
+              // var  photos = await photoUploads.FindPhotoId(post.Id.ToString(), keys[0].PhotoId);
+              // await photoUploads.Delete(photos);
+         // var vide =     await videoContext.GetVideoPublicId(post.Id.ToString(), keys[0].VideoId);
+            
+             // await videoContext.Delete(vide);
+             await postContext.Delete(post);
+            }
+
+            if (await postContext.SaveChanges())
+                return new ReturnResult
+                {
+                    Succeeded = true
+                };
+
+
+            return new ReturnResult
+            {
+                Succeeded = false,
+                Error = "error deleting value from database"
+            };
         }
     }
 }
