@@ -100,5 +100,24 @@ namespace Realist.Api.Controllers
 
             return Ok(new {Comment ="Comments loaded successfully"});
         }
+        [HttpPatch]
+        public async Task<ActionResult> PutComment(CommentsModel comment)
+        {
+            
+
+            try{
+                var model = await _commemtContext.GetComment(comment.CommentId);
+                model.Body = comment.Body;
+                var result =  await _commemtContext.Update(model);
+                if(!result.Succeeded) return StatusCode(StatusCodes.Status500InternalServerError,result.Error);
+            }
+            catch(Exception e){
+
+              _logger.LogError(e.InnerException?.ToString() ?? e.Message);
+                _mailService.SendMail(string.Empty, e.InnerException?.ToString() ?? e.Message, "error");
+                return StatusCode(statusCode: StatusCodes.Status500InternalServerError, "Internal server error");
+            }
+            return Ok(new {Success = true});
+        }
     }
 }

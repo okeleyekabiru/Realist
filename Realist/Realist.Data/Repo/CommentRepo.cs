@@ -31,6 +31,11 @@ namespace Realist.Data.Repo
             return await _context.Comments.Where(e =>  e.Id.Equals(Guid.Parse(commentId))).FirstOrDefaultAsync();
         }
 
+        public Task<ReturnResult> Delete(Comment comment)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<bool> SaveChanges()
         {
             return await _context.SaveChangesAsync() > 0;
