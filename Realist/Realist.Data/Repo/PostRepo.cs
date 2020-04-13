@@ -58,7 +58,7 @@ return  Task.CompletedTask;
 
         public async Task<Post> GetPost(string postId)
         {
-           var result = await _context.Posts.Where(r => r.Id.Equals(Guid.Parse(postId))).FirstOrDefaultAsync();
+           var result = await _context.Posts.Include(r => r.Photos).Include(r => r.Videos).Where(r => r.Id.Equals(Guid.Parse(postId))).FirstOrDefaultAsync();
         return   result;
         }
 

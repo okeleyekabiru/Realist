@@ -41,7 +41,10 @@ namespace Realist.Data.Services
         builder.Entity<Post>(opt =>
         {
             opt.HasKey(o => o.Id);
-            opt.HasMany(o => o.Comments).WithOne();
+            opt.HasMany(o => o.Comments)
+                .WithOne()
+                .HasForeignKey(e => e.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
             opt.HasOne(o => o.User).WithMany(o => o.Posts)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);

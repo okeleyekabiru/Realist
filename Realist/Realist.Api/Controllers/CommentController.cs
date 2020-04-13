@@ -98,7 +98,7 @@ namespace Realist.Api.Controllers
                 return StatusCode(statusCode: StatusCodes.Status500InternalServerError, "Internal server error");
             }
 
-            return Ok(newModel);
+            return Ok(new {Comment ="Comments loaded successfully"});
         }
     }
 }
