@@ -62,6 +62,8 @@ namespace Realist.Data.Services
             opt.HasOne(o => o.Comment)
                 .WithMany(o => o.Replies)
                 .HasForeignKey(r => r.CommentId).OnDelete(DeleteBehavior.Cascade);
+            opt.HasMany(e => e.Replies).WithOne().HasForeignKey(e => e.ReplyId).OnDelete(DeleteBehavior.NoAction);
+
         });
         builder.Entity<UserInfo>(opt =>
         {
@@ -96,6 +98,7 @@ namespace Realist.Data.Services
 
         });
         builder.Entity<BotInfo>(opt => { opt.HasKey(o => o.Id); });
+       
         }
     }
 }

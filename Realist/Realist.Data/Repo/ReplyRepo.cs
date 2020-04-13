@@ -37,5 +37,8 @@ namespace Realist.Data.Repo
         {
             return await _context.SaveChangesAsync() > 0;
         }
+         // public async  Task<Reply> Get(string replyId){
+         //     return await   _context.Replies.Where(s => s.Id.Equals(Guid.Parse(replyId))).FirstOrDefaultAsync();
+         // }
     }
 }
