@@ -7,9 +7,13 @@ namespace Realist.Data.ViewModels
 {
   public  class CommentsModel
     {
-        public string Body { get; set; }
+        
         [Required]
+        public string Body { get; set; }
+      
         public string PostId { get; set; }
+
+        public string CommentId { get; set; }
        
     }
 }
