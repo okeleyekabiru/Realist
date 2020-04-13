@@ -59,6 +59,7 @@ namespace Realist.Api
                 opt.UseSqlServer(Configuration.GetConnectionString("RealistConnection"));
 
             });
+            services.AddScoped<IReply,ReplyRepo>();
             services.AddSignalR();
             services.AddScoped<IDeviceAuth, DeviceAuthentication>();
             services.AddTransient<IMailService, EmailService>();
