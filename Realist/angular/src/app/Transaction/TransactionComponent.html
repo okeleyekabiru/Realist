@@ -1,0 +1,29 @@
+<div class="d-flex justify-content-center" >
+    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+        <div class="card-header" >fullName</div>
+        <div class="card-body">
+          <h5 class="card-title" *ngIf="user">{{user.fullName}} </h5>
+        </div>
+        </div>
+        <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+            <div class="card-header">accountNumber</div>
+            <div class="card-body">
+              <h5 class="card-title"  *ngIf="user" >{{user.accountNumber}}</h5>
+            </div>
+            </div>
+</div>
+<div class="container d-flex justify-content-around mt-5">
+    <div class="float-lg-left">
+    <a routerLink="/balance"[state]="{account:user.accountNumber}" class="btn btn-primary btn-lg btn-block mt-5">Balance</a>
+    <a routerLink="/accountDetails"[state]="{account:user.accountNumber}" class="btn btn-primary btn-lg btn-block mt-5">Account Details</a>
+  
+
+</div>
+<div>
+    <a routerLink="/withdraw"  [state]="{account:user.accountNumber}" class="btn btn-primary btn-lg btn-block mt-5">Witdrawal
+
+    </a>
+    <a routerLink="/deposit"  [state]="{account:user.accountNumber}" class="btn btn-primary btn-lg btn-block mt-5">Deposit</a>
+  
+</div>
+</div>

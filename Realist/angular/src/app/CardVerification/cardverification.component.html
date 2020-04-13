@@ -1,0 +1,24 @@
+<div class="alert alert-danger text-center" *ngIf=" errorMessage">{{errorMessage}}</div>
+<div class="d-flex justify-content-center">
+<div data-credit-card="" class="mdc-card mdc-card--outlined">
+    <form name="Atmform"(keyup) = "validateCardNumber(first4Digits+second4Digits+Third4Digits+Last4Digits)" >
+		<div class="mdc-card__primary-action">
+            
+			<img src="https://placehold.it/120x60.png?text=Card" data-card-type="" id="img" alt="card" name="image"/>
+			<div data-cc-digits="">
+				<input type="text" size="4" maxlength="4" (keyup) ="smartCursor()" placeholder="----"[(ngModel)]="first4Digits"  name="first4Digits" (keyup) = "detectCardType(first4Digits)" >
+				<input type="text" size="4" maxlength="4" (keyup) ="smartCursor()"  placeholder="----" [(ngModel)]="second4Digits" name="second4Digits" >
+				<input type="text" size="4"  maxlength="4" (keyup) ="smartCursor()" placeholder="----" [(ngModel)] = "Third4Digits" name="Third4Digits" >
+				<input type="text" size="4" maxlength="4" (keyup) ="smartCursor()" placeholder="----" [(ngModel)] = "Last4Digits"name="Last4Digits" >
+			</div>
+			<div data-cc-info="" >
+			<input type="text" size="20" (keyup) ="smartCursor()" placeholder="Name Surname" [(ngModel)] ="CardHolder" name="CardHolder" (keyup) ="validateCardHolderName()">
+			<input type="text" size="6"maxlength="5" placeholder="MM/YY" [(ngModel)]="fieldDate" name="fieldDate" (keyup) ="validateCardExpiryDate()">
+            </div>
+       
+        </div>
+
+    </form>
+        </div> 
+    </div>
+    <pm-pin  [cards]="cardnumber"  [expiry] ="expiry"></pm-pin>
