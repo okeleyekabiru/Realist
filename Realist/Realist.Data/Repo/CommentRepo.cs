@@ -31,9 +31,23 @@ namespace Realist.Data.Repo
             return await _context.Comments.Where(e =>  e.Id.Equals(Guid.Parse(commentId))).FirstOrDefaultAsync();
         }
 
-        public Task<ReturnResult> Delete(Comment comment)
+        public async Task<ReturnResult> Delete(Comment comment)
         {
-            throw new NotImplementedException();
+            _context.Comment.Remove(comment);
+            if (await SaveChanges())
+            {
+                return new ReturnResult
+                {
+                    Succeeded =  true
+                };
+
+
+            }
+            return     new ReturnResult
+            {
+                Succeeded = false,
+                Error = "An error occured when updating database"
+            };
         }
 
         public async Task<bool> SaveChanges()
