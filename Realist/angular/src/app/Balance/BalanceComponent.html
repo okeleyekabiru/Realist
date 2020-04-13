@@ -1,0 +1,15 @@
+
+<div class="d-flex justify-content-center align-items-center mt-5" >
+    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+        <div class="card-header" >Account Balance</div>
+        <div class="card-body">
+          <h5 class="card-title" *ngIf="account">{{account.balance}} </h5>
+        </div>
+        </div>
+        <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+            <div class="card-header">Account Number</div>
+            <div class="card-body">
+              <h5 class="card-title"  *ngIf="account" >{{account.accountNumber}}</h5>
+            </div>
+            </div>
+</div>

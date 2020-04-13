@@ -19,7 +19,8 @@ namespace Realist.Data.Extensions
             model.UserId = userId;
             var postId = Guid.NewGuid();
             model.Id = postId;
-
+            model.DatePosted = DateTime.Now;
+            ;
             if (post.Photo != null)
             {
                 var photoUpload = photoAccessor.AddPhoto(post.Photo);
@@ -138,11 +139,7 @@ namespace Realist.Data.Extensions
             var imageResult =  photoAccessor.DeletePhoto(keys[0].PhotoId);
             if (videoResult && imageResult.ToLower().Equals("ok"))
             {
-              // var  photos = await photoUploads.FindPhotoId(post.Id.ToString(), keys[0].PhotoId);
-              // await photoUploads.Delete(photos);
-         // var vide =     await videoContext.GetVideoPublicId(post.Id.ToString(), keys[0].VideoId);
             
-             // await videoContext.Delete(vide);
              await postContext.Delete(post);
             }
 

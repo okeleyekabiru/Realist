@@ -117,7 +117,8 @@ namespace Realist.Api.Controllers
                 return StatusCode(500, "Internal server error");
             }
 
-            return Ok(posts);
+             var newModel = _mapper.Map<List<Post>, List<PostViewModel>>(posts);
+            return Ok(newModel);
         }
 
         [HttpGet("id")]
@@ -134,7 +135,7 @@ namespace Realist.Api.Controllers
                 var redis = await _redis.GetRedis<Post>(id.Id);
                 if (redis == null)
                 {
-                    model = await _redis.SetRedis(await _postContext.Get(id.Id), id.Id);
+                    model = await _redis.SetRedis(await _postContext.GetPost(id.Id), id.Id);
                     if (model == null) return NotFound();
                 }
                 else
@@ -149,7 +150,18 @@ namespace Realist.Api.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
 
-            return Ok(model);
+            var newModel
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                = _mapper.Map<Post, PostViewModel>(model);
+            return Ok(newModel);
         }
         [HttpPut]
         public async Task<ActionResult> Update([FromForm] PostModel post)

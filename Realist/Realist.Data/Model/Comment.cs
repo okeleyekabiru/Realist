@@ -16,6 +16,7 @@ namespace Realist.Data.Model
         public DateTime DatePosted { get; set; }
         public DateTime? Updated { get; set; }
        public  ICollection<Reply> Replies { get; set; }
+       public Guid PostId { get; set; }
        public string ReplyId { get; set; }
 
     }

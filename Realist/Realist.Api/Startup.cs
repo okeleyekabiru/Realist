@@ -27,6 +27,7 @@ using Plugins.JwtHandler;
 using Plugins.Mail;
 using Plugins.Redis.Cache;
 using Plugins.Youtube;
+using Realist.Api.SignalR;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
 using Realist.Data.Repo;
@@ -50,13 +51,15 @@ namespace Realist.Api
             services.AddControllers();
             // if any problem occur with autoMapper check here
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddAutoMapper(typeof(User),typeof(UserReturnModel),typeof(Post));
+            services.AddAutoMapper(typeof(User),typeof(UserReturnModel),typeof(Post),typeof(Comment));
             services.AddScoped<IPost, PostRepo>();
+            services.AddScoped<IComment, CommentRepo>();
             services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("RealistConnection"));
 
             });
+            services.AddSignalR();
             services.AddScoped<IDeviceAuth, DeviceAuthentication>();
             services.AddTransient<IMailService, EmailService>();
             services.AddScoped<IUser, UserRepo>();
@@ -115,11 +118,12 @@ namespace Realist.Api
                 app.UseAuthentication();
                 app.UseRouting();
                 app.UseAuthorization();
-
+                app.UseDefaultFiles();
                 app.UseStaticFiles();
                 app.UseEndpoints(endpoints =>
                     {
-                        endpoints.MapControllers(); 
+                        endpoints.MapControllers();
+                        endpoints.MapHub<CommentHub>("/comment");
 
                     }
                
