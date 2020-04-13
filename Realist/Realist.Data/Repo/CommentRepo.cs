@@ -33,7 +33,7 @@ namespace Realist.Data.Repo
 
         public async Task<ReturnResult> Delete(Comment comment)
         {
-            _context.Comment.Remove(comment);
+            _context.Comments.Remove(comment);
             if (await SaveChanges())
             {
                 return new ReturnResult
@@ -73,5 +73,8 @@ namespace Realist.Data.Repo
             return await _context.Comments.Include(r => r.Replies).Where(r => r.PostId.Equals(Guid.Parse(postId)))
                 .ToListAsync();
         }
+      public async Task<Comment> GetCommentReply(string commentId){
+          return await _context.Comments.Include(r => r.Replies).Where(s=> s.Id.Equals(Guid.Parse(commentId))).FirstOrDefaultAsync();
+      }
     }
 }

@@ -37,7 +37,6 @@ namespace Realist.Api.Controllers
         private readonly IPhotoAccessor _photoAccessor;
         private readonly IVideo _videoContext;
         private readonly IRedis _redis;
-      
 
 
         public PostController(IPost postContext, IMailService mailService, ILogger<PostController> logger,
@@ -69,13 +68,13 @@ namespace Realist.Api.Controllers
                 }
 
                 var model = _mapper.Map<PostModel, Post>(post);
-                var postUpload = await post.UploadPost(userId,_photoUpload ,_photoAccessor, _youtubeuploader, _videoContext,
+                var postUpload = await post.UploadPost(userId, _photoUpload, _photoAccessor, _youtubeuploader,
+                    _videoContext,
                     _postContext, model);
                 if (!postUpload)
                 {
-                    return BadRequest(new { Error = "Error Uploading to database" });
+                    return BadRequest(new {Error = "Error Uploading to database"});
                 }
-               
             }
             catch (Exception e)
             {
@@ -117,7 +116,7 @@ namespace Realist.Api.Controllers
                 return StatusCode(500, "Internal server error");
             }
 
-             var newModel = _mapper.Map<List<Post>, List<PostViewModel>>(posts);
+            var newModel = _mapper.Map<List<Post>, List<PostViewModel>>(posts);
             return Ok(newModel);
         }
 
@@ -151,18 +150,10 @@ namespace Realist.Api.Controllers
             }
 
             var newModel
-                
-                
-                
-                
-                
-                
-                
-                
-                
                 = _mapper.Map<Post, PostViewModel>(model);
             return Ok(newModel);
         }
+
         [HttpPut]
         public async Task<ActionResult> Update([FromForm] PostModel post)
         {
@@ -172,14 +163,14 @@ namespace Realist.Api.Controllers
                 var posts = await _postContext.Get(post.Id);
                 post.Body ??= posts.Body;
                 var model = _mapper.Map(post, posts);
-                
-                var postUpload = await post.UpdatePost(userId, _photoUpload, _photoAccessor, _youtubeuploader, _videoContext,
-                    _postContext, model,_mapper);
+
+                var postUpload = await post.UpdatePost(userId, _photoUpload, _photoAccessor, _youtubeuploader,
+                    _videoContext,
+                    _postContext, model, _mapper);
                 if (!postUpload)
                 {
-                    return BadRequest(new { Error = "Error Uploading to database" });
+                    return BadRequest(new {Error = "Error Uploading to database"});
                 }
-
             }
             catch (Exception e)
             {
@@ -189,8 +180,9 @@ namespace Realist.Api.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
 
-            return Ok(new { Post = "Successfully updated" });
+            return Ok(new {Post = "Successfully updated"});
         }
+
         [HttpDelete]
         public async Task<ActionResult> Delete(PostModel post)
         {
@@ -198,12 +190,12 @@ namespace Realist.Api.Controllers
             try
             {
                 var userId = _userContext.GetCurrentUser();
-                if (string.IsNullOrEmpty(post.Id)) return BadRequest(new { Error = "Invalid data" });
-                var posts = await _postContext.Get(postId:post.Id);
+                if (string.IsNullOrEmpty(post.Id)) return BadRequest(new {Error = "Invalid data"});
+                var posts = await _postContext.Get(postId: post.Id);
                 result = await posts.Delete(userId, _photoUpload, _photoAccessor, _youtubeuploader, _videoContext,
                     _postContext);
 
-                    
+
                 if (result.Succeeded)
                 {
                     return Ok(new {Success = "Entity as been successfully deleted"});
@@ -211,12 +203,12 @@ namespace Realist.Api.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e.InnerException?.ToString()??e.Message);
-                _mailService.SendMail(string.Empty, e.InnerException?.ToString() ?? e.Message,"error");
+                _logger.LogError(e.InnerException?.ToString() ?? e.Message);
+                _mailService.SendMail(string.Empty, e.InnerException?.ToString() ?? e.Message, "error");
                 return StatusCode(500, "Internal server error");
             }
 
-            return BadRequest(new {Error = result });
+            return BadRequest(new {Error = result});
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Realist.Data.Infrastructure
        Task<bool> SaveChanges();
        Task<IEnumerable<Comment>> GetAllPostComment(string postId);
        Task<Comment> GetComment(string commentId);
+        Task<Comment> GetCommentReply(string commentId);
        Task<ReturnResult> Delete(Comment comment);
        Task<ReturnResult> Update(Comment comment);
    }

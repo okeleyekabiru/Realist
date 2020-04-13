@@ -38,6 +38,8 @@ namespace Realist.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(CommentsModel comment)
         {
+              IEnumerable<CommentsViewModel> newModel;
+              IEnumerable<Comment> model;
             try
             {
                 if (!ModelState.IsValid)
@@ -57,8 +59,11 @@ namespace Realist.Api.Controllers
           {
               return StatusCode(StatusCodes.Status100Continue, new {Error = "an error occured while processing "});
           }
-
-         
+            model = await _commemtContext.GetAllPostComment(comment.PostId);
+            if(model.Count() > 0){
+                newModel = _mapper.Map< IEnumerable<Comment>, IEnumerable<CommentsViewModel>>(model);
+                await _hub.Clients.All.SendAsync("comment",newModel);
+            } 
 
           }
           catch (Exception e)
@@ -68,14 +73,15 @@ namespace Realist.Api.Controllers
               return StatusCode(statusCode: StatusCodes.Status500InternalServerError, "Internal server error");
             }
 
-           
-
+            
+        
           return Ok(new {Success = "comment Sucessfully posted"});
         }
 
         public async Task<ActionResult<IEnumerable<CommentsModel>>> Get(IdModel commentsModel)
         {
             IEnumerable<CommentsViewModel> newModel;
+    
           
             try
             {
@@ -84,11 +90,12 @@ namespace Realist.Api.Controllers
                     return BadRequest(ModelState.ValidationState);
                 }
              var model = await _commemtContext.GetAllPostComment(commentsModel.PostId);
-               newModel = _mapper.Map< IEnumerable<Comment>, IEnumerable<CommentsViewModel>>(model);
-              await _hub.Clients.All.SendAsync("comment",newModel);
+               
+            
                 if (model == null) return NoContent();
 
-
+        newModel = _mapper.Map< IEnumerable<Comment>, IEnumerable<CommentsViewModel>>(model);
+        await _hub.Clients.All.SendAsync("comment",newModel);
             }
             catch (Exception e)
             {
@@ -103,13 +110,21 @@ namespace Realist.Api.Controllers
         [HttpPatch]
         public async Task<ActionResult> PutComment(CommentsModel comment)
         {
-            
+            IEnumerable<Comment> comments;
+             IEnumerable<CommentsViewModel> newModel;
 
             try{
                 var model = await _commemtContext.GetComment(comment.CommentId);
                 model.Body = comment.Body;
                 var result =  await _commemtContext.Update(model);
                 if(!result.Succeeded) return StatusCode(StatusCodes.Status500InternalServerError,result.Error);
+
+            comments =  await _commemtContext.GetAllPostComment(comment.PostId);
+            if(comments.Count() > 0) {
+
+            newModel = _mapper.Map< IEnumerable<Comment>, IEnumerable<CommentsViewModel>>(comments);
+              await _hub.Clients.All.SendAsync("comment",newModel);
+            }
             }
             catch(Exception e){
 
@@ -117,18 +132,29 @@ namespace Realist.Api.Controllers
                 _mailService.SendMail(string.Empty, e.InnerException?.ToString() ?? e.Message, "error");
                 return StatusCode(statusCode: StatusCodes.Status500InternalServerError, "Internal server error");
             }
+             
             return Ok(new {Success = true});
         }
 
         [HttpDelete]
         public async Task<ActionResult> Delete(IdModel id)
         {
+           IEnumerable<Comment> comments;
+             IEnumerable<CommentsViewModel> newModel;
+
             try
             {
-                var model = await _commemtContext.GetComment(id);
+                var model = await _commemtContext.GetComment(id.CommentId);
                 var result = await _commemtContext.Delete(model);
                 if (!result.Succeeded) return StatusCode(StatusCodes.Status500InternalServerError, result.Error);
+
+                comments =  await _commemtContext.GetAllPostComment(id.PostId);
+            if(comments.Count() > 0) {
+
+            newModel = _mapper.Map< IEnumerable<Comment>, IEnumerable<CommentsViewModel>>(comments);
+              await _hub.Clients.All.SendAsync("comment",newModel);
             }
+             }
             catch (Exception e)
             {
                 _logger.LogError(e.InnerException?.ToString() ?? e.Message);
