@@ -9,7 +9,7 @@ namespace Realist.Data.Infrastructure
    public interface IReply
    {
        Task<ReturnResult> Add(Reply reply);
-       // Task<Reply> Get(string replyId);
+        Task<Reply> Get(string replyId);
        Task<bool> SaveChanges();
    }
 }

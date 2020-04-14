@@ -18,7 +18,7 @@ namespace Realist.Data.Model
         public Guid CommentId { get; set; }
         public  Comment Comment { get; set; }
         public ICollection<Reply> Replies { get; set; }
-        public Guid ReplyId { get; set; }
+        public Guid? ReplyId { get; set; }
        
     }
 }
