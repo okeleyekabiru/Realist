@@ -122,8 +122,21 @@ namespace Realist.Api.Controllers
             var newModel = _mapper.Map<List<Post>, List<PostViewModel>>(posts);
             return Ok(newModel);
         }
-
-        [HttpGet("id")]
+        /// <summary>
+        ///{
+      //  "id": "string,
+      //  "body": "string,
+      //  "photos": [],
+      //  "videos": [],
+      //  "category": null,
+      //  "news": null,
+      //  "articles": null,
+       // "commentCount": 1
+    //}
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("id")]
         public async Task<ActionResult> Get(GetPostModel id)
         {
             Post model;
@@ -163,7 +176,11 @@ namespace Realist.Api.Controllers
              newModel.CommentCount = await _postContext.GetCommentCount(id.Id);
             return Ok(newModel);
         }
-
+        /// <summary>
+        /// return anonymous object
+        /// </summary>
+        /// <param name="post"></param>
+        /// <returns></returns>
         [HttpPut]
         public async Task<ActionResult> Update([FromForm] PostModel post)
         {
