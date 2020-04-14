@@ -11,7 +11,7 @@ namespace Realist.Data.ViewModels
         public string Body { get; set; }
         public DateTime DatePosted { get; set; }
         public DateTime? Updated { get; set; }
-        public ICollection<Reply> Replies { get; set; }
+        public ICollection<ReplyViewModel> Replies { get; set; }
 
 
     }

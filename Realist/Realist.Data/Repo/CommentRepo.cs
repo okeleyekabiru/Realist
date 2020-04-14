@@ -31,6 +31,8 @@ namespace Realist.Data.Repo
             return await _context.Comments.Where(e =>  e.Id.Equals(Guid.Parse(commentId))).FirstOrDefaultAsync();
         }
 
+      
+
         public async Task<ReturnResult> Delete(Comment comment)
         {
             _context.Comments.Remove(comment);
@@ -70,11 +72,11 @@ namespace Realist.Data.Repo
         }
          public async Task<IEnumerable<Comment>> GetAllPostComment(string postId)
         {
-            return await _context.Comments.Include(r => r.Replies).Where(r => r.PostId.Equals(Guid.Parse(postId)))
+            return await _context.Comments.Include(r => r.Replies).ThenInclude(e => e.Replies).Where(r => r.PostId.Equals(Guid.Parse(postId)))
                 .ToListAsync();
         }
       public async Task<Comment> GetCommentReply(string commentId){
-          return await _context.Comments.Include(r => r.Replies).Where(s=> s.Id.Equals(Guid.Parse(commentId))).FirstOrDefaultAsync();
+          return await _context.Comments.Include(r => r.Replies).ThenInclude(s => s.Replies).Where(s=> s.Id.Equals(Guid.Parse(commentId))).FirstOrDefaultAsync();
       }
     }
 }
