@@ -11,11 +11,11 @@ namespace Realist.Data.ViewModels
         public string Id { get; set; }
         public string Body { get; set; }
         public ICollection<Photo> Photos { get; set; }
-        public ICollection<Comment> Comments { get; set; }
         public ICollection<Videos> Videos { get; set; }
         public Category? Category { get; set; }
         public News? News { get; set; }
         public Articles? Articles { get; set; }
+        public long CommentCount { get; set; }
     }
 
 }

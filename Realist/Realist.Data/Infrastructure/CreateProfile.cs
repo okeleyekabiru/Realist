@@ -21,6 +21,7 @@ namespace Realist.Data.Infrastructure
            CreateMap<Comment, CommentsViewModel>().ForMember(o => o.Replies, r => r.MapFrom(s => s.Replies))
                .ReverseMap();
            CreateMap<Reply, ReplyModel>().ReverseMap();
+           CreateMap<Reply, ReplyViewModel>().ReverseMap();
        }
     }
 }

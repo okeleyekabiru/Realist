@@ -91,6 +91,8 @@ namespace Realist.Api.Controllers
         public ActionResult GetAll([FromQuery] PaginationModel page)
         {
             PagedList<Post> posts;
+
+
             try
             {
                 posts = _postContext.GetAll(page);
@@ -107,6 +109,7 @@ namespace Realist.Api.Controllers
                 };
 
                 Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+               
             }
             catch (Exception e)
             {
@@ -124,6 +127,8 @@ namespace Realist.Api.Controllers
         public async Task<ActionResult> Get(GetPostModel id)
         {
             Post model;
+            PostViewModel newModel;
+           
             try
             {
                 if (!ModelState.IsValid || string.IsNullOrEmpty(id.Id))
@@ -134,12 +139,16 @@ namespace Realist.Api.Controllers
                 var redis = await _redis.GetRedis<Post>(id.Id);
                 if (redis == null)
                 {
+                 
                     model = await _redis.SetRedis(await _postContext.GetPost(id.Id), id.Id);
                     if (model == null) return NotFound();
                 }
                 else
                 {
-                    return Ok(redis);
+                    newModel
+                        = _mapper.Map<Post, PostViewModel>(redis);
+                    newModel.CommentCount = await _postContext.GetCommentCount(id.Id);
+                    return Ok(newModel);
                 }
             }
             catch (Exception e)
@@ -149,8 +158,9 @@ namespace Realist.Api.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
 
-            var newModel
+             newModel
                 = _mapper.Map<Post, PostViewModel>(model);
+             newModel.CommentCount = await _postContext.GetCommentCount(id.Id);
             return Ok(newModel);
         }
 

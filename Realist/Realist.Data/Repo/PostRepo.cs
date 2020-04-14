@@ -39,20 +39,24 @@ return  Task.CompletedTask;
        
 
         }
+        public async Task<long> GetCommentCount(string postId)
+        {
+            return await _context.Comments.Where(r => r.PostId.Equals(Guid.Parse(postId))).LongCountAsync();
+        }
 
         public PagedList<Post> GetAll(PaginationModel page)
         {
             
           
-            return  PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos).Include(r => r.Comments)
-                .ThenInclude(r => r.Replies),page.PageNumber,page.PageSize);
+            return  PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos)
+                ,page.PageNumber,page.PageSize);
 
         }
 
         public async Task<Post> Get(string postId)
         {
             return await _context.Posts.Include(r => r.Photos).Include(r => r.Videos)
-                .Include(r => r.Comments).ThenInclude(r => r.Replies).Where(r => r.Id.Equals(Guid.Parse(postId))).FirstOrDefaultAsync();
+               .Where(r => r.Id.Equals(Guid.Parse(postId))).FirstOrDefaultAsync();
 
         }
 

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
 using Realist.Data.Services;
 using Realist.Data.ViewModels;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
 namespace Realist.Data.Repo
 {
    public class ReplyRepo:IReply
@@ -33,9 +36,14 @@ namespace Realist.Data.Repo
             };
         }
 
+     
+
         public async Task<bool> SaveChanges()
         {
             return await _context.SaveChangesAsync() > 0;
         }
+         public async  Task<Reply> Get(string replyId){
+             return await   _context.Replies.Include(r => r.Replies).Where(s => s.Id.Equals(Guid.Parse(replyId))).FirstOrDefaultAsync();
+         }
     }
 }
