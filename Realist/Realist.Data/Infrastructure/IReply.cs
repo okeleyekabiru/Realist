@@ -10,6 +10,7 @@ namespace Realist.Data.Infrastructure
    {
        Task<ReturnResult> Add(Reply reply);
         Task<Reply> Get(string replyId);
+        Task<ReturnResult> Update(Reply reply);
        Task<bool> SaveChanges();
    }
 }
