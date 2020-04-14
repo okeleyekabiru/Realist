@@ -36,7 +36,24 @@ namespace Realist.Data.Repo
             };
         }
 
-     
+
+        public async Task<ReturnResult> Update(Reply reply)
+        {
+            var model =_context.Update(reply);
+            if (await  SaveChanges())
+            {
+                return  new ReturnResult
+                {
+                    Succeeded = true
+                };
+            }
+
+            return new ReturnResult
+            {
+                Succeeded = false,
+                Error = "An error occured when updating database"
+            };
+        }
 
         public async Task<bool> SaveChanges()
         {
