@@ -114,5 +114,29 @@ namespace Realist.Api.Controllers
 
             return Ok(new {Success = true});
         }
+        [HttpDelete]
+        public async Task<ActionResult> Delete(ReplyModel reply)
+        {
+            if (reply.ReplyId == null) return BadRequest(new {Error = "reply id is required"});
+            try
+            {
+                var replyValue =await _replyContext.Get(reply.ReplyId);
+                if (replyValue == null) return NotFound();
+                var result = await _replyContext.Delete(replyValue);
+                if(!result.Succeeded) return StatusCode(500, result.Error);
+
+
+            }
+            catch (Exception e)
+            {
+
+                _logger.LogError(e.InnerException?.ToString() ?? e.Message);
+                _mailService.SendMail(string.Empty, e.InnerException?.ToString() ?? e.Message, "error");
+                return StatusCode(500, "Internal server error");
+            }
+
+            return Ok(new {Success = true});
+
+        }
     }
 }
