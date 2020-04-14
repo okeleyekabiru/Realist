@@ -90,8 +90,7 @@ namespace Realist.Api.Controllers
         [HttpGet]
         public ActionResult GetAll([FromQuery] PaginationModel page)
         {
-            PagedList<Post> posts;      
-             
+            PagedList<Post> posts;
 
 
             try
@@ -129,6 +128,7 @@ namespace Realist.Api.Controllers
         {
             Post model;
             PostViewModel newModel;
+           
             try
             {
                 if (!ModelState.IsValid || string.IsNullOrEmpty(id.Id))
@@ -139,6 +139,7 @@ namespace Realist.Api.Controllers
                 var redis = await _redis.GetRedis<Post>(id.Id);
                 if (redis == null)
                 {
+                 
                     model = await _redis.SetRedis(await _postContext.GetPost(id.Id), id.Id);
                     if (model == null) return NotFound();
                 }
@@ -159,6 +160,7 @@ namespace Realist.Api.Controllers
 
              newModel
                 = _mapper.Map<Post, PostViewModel>(model);
+             newModel.CommentCount = await _postContext.GetCommentCount(id.Id);
             return Ok(newModel);
         }
 
