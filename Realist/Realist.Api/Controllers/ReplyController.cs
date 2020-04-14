@@ -89,5 +89,30 @@ namespace Realist.Api.Controllers
 
             return Ok(mapModel);
         }
+
+        [HttpPut]
+        public async Task<ActionResult> PutReply(ReplyModel reply)
+        {
+
+            try
+            {
+                var getReply = await _replyContext.Get(reply.ReplyId);
+                if (getReply == null) return NotFound();
+                getReply.Body = reply.Body ?? getReply.Body;
+                getReply.Updated = DateTime.Now;
+                var result = await _replyContext.Update(getReply);
+                if(!result.Succeeded) return StatusCode(500, result.Error);
+
+            }
+            catch (Exception e)
+            {
+                
+                    _logger.LogError(e.InnerException?.ToString() ?? e.Message);
+                _mailService.SendMail(string.Empty, e.InnerException?.ToString() ?? e.Message, "error");
+                return StatusCode(500, "Internal server error");
+            }
+
+            return Ok(new {Success = true});
+        }
     }
 }
