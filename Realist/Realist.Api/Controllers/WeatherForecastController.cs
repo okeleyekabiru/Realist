@@ -8,6 +8,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.FileSystemChange;
 using Plugins;
 using Plugins.DeviceAuthentication;
+using Realist.Data.Extensions;
+using Realist.Data.Infrastructure;
+using Realist.Data.Model;
 
 namespace Realist.Api.Controllers
 {
@@ -22,29 +25,30 @@ namespace Realist.Api.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IDeviceAuth _device;
+        private readonly IUserInfo _userInfoContext;
+        private readonly IBot _botContext;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger,IDeviceAuth device)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger,IDeviceAuth device,IUserInfo userInfoContext,IBot botContext)
         {
             _logger = logger;
             _device = device;
+            _userInfoContext = userInfoContext;
+            _botContext = botContext;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<ActionResult> Get()
         {
-           
-            string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-          var model =  DeviceAddress.GetMacAddress().GetAddressBytes();
-          var convert = Convert.ToBase64String(model);
+            var m = GetDeviceCurrentLocation.GetCoordinates("nigeria");
 
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+
+            var result = await RealistExtension.VerifyDevice(_device, _userInfoContext, "ghana", _botContext);
+            if (!result.Succeeded) return BadRequest();
+
+            return Ok();
+
+
+
         }
     }
 }
