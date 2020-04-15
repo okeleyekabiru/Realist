@@ -22,7 +22,66 @@ namespace Realist.Data.Repo
         }
 
 
-     
+        public PagedList<Post> GetPostByCategory(PaginationModel page)
+        {
+
+            PagedList<Post> posts = null;
+
+            if (page.Category.Equals(1))
+            {
+                switch (page.SubCategory)
+                {
+                    case (int)News.Entertainment:
+                        posts = PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos)
+                            .Where(r => r.News == News.Entertainment), page.PageNumber, page.PageSize);
+                        break;
+                    case (int)News.Politics:
+                        posts = PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos).Where(r => r.News == News.Politics)
+                            , page.PageNumber, page.PageSize);
+                        break;
+                    case (int)News.CurrentAffairs:
+                        posts = PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos)
+                            .Where(r => r.News == News.CurrentAffairs), page.PageNumber, page.PageSize);
+                        break;
+                    case (int)News.Others:
+                        posts = PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos)
+                            .Where(r => r.News == News.Others), page.PageNumber, page.PageSize);
+                        break;
+                    case (int)News.Sport:
+                        posts = PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos)
+                            .Where(r => r.News == News.Sport), page.PageNumber, page.PageSize);
+                        break;
+
+                }
+            }
+            else if (page.Category.Equals(2))
+            {
+                switch (page.SubCategory)
+                {
+                    case (int)Articles.Motivation:
+                        posts = PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos)
+                            .Where(r => r.Articles == Articles.Motivation), page.PageNumber, page.PageSize);
+                        break;
+                    case (int)Articles.RelationShip:
+                        posts = PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos)
+                            .Where(r => r.Articles == Articles.RelationShip), page.PageNumber, page.PageSize);
+                        break;
+                    case (int)Articles.Religious:
+                        posts = PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos)
+                            .Where(r => r.Articles == Articles.Religious), page.PageNumber, page.PageSize);
+                        break;
+                    case (int)Articles.Others:
+                        posts = PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos)
+                            .Where(r => r.Articles == Articles.Others), page.PageNumber, page.PageSize);
+                        break;
+                }
+
+            }
+            
+
+            return posts;
+           
+        }
 
         public  Task Delete(Post post)
         {
@@ -46,11 +105,8 @@ return  Task.CompletedTask;
 
         public PagedList<Post> GetAll(PaginationModel page)
         {
-            
-          
-            return  PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos)
-                ,page.PageNumber,page.PageSize);
-
+            return PagedList<Post>.ToPagedList(_context.Posts.Include(r => r.Photos).Include(r => r.Videos)
+                , page.PageNumber, page.PageSize);
         }
 
         public async Task<Post> Get(string postId)
