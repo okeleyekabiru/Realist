@@ -84,5 +84,6 @@ namespace Plugins.DeviceAuthentication
         internal class Line
         {
         }
+
 }
 
