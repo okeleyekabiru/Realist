@@ -10,7 +10,7 @@ namespace Realist.Data.Infrastructure
     public interface IPost
     {
        Task<long> GetCommentCount(string postId);
-
+       PagedList<Post> GetPostByCategory(PaginationModel page);
        Task Delete(Post post);
         Task Post(Post post);
         PagedList<Post> GetAll(PaginationModel page);
