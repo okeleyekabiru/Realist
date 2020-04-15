@@ -55,6 +55,8 @@ namespace Realist.Api
             services.AddAutoMapper(typeof(User),typeof(UserReturnModel),typeof(Post),typeof(Comment));
             services.AddScoped<IPost, PostRepo>();
             services.AddScoped<IComment, CommentRepo>();
+            services.AddScoped<IUserInfo, UserInfoRepo>();
+            services.AddScoped<IBot, BotRepo>();
             services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );

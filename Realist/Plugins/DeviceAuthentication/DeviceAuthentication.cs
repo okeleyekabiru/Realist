@@ -2,6 +2,7 @@
 
 using System;
 using System.Globalization;
+using System.Net;
 using System.Runtime.InteropServices;
 using DeviceDetectorNET;
 using DeviceDetectorNET.Cache;
@@ -46,6 +47,11 @@ namespace Plugins.DeviceAuthentication
 
             return false;
 
+        }
+
+        public string CurrentDeviceName()
+        {
+          return  Dns.GetHostEntry(GetCurrentUserIp()).HostName;
         }
 
         public string GetUserLocation(string location)

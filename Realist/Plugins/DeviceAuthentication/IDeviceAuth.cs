@@ -11,6 +11,7 @@ namespace Plugins
      string GetCurrentUserIp();
      string GetBrowserId();
      bool VerifyIMei(string imei);
+     string CurrentDeviceName();
      string GetUserLocation(string location);
    DeviceInfo GetDeviceDetails();
  }
