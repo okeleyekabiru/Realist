@@ -21,6 +21,8 @@ namespace Realist.Data.Model
         public Category? Category { get; set; }
         public  News? News { get; set; }
         public Articles? Articles { get; set; }
+        public UserInfo UserInfo { get; set; }
+        public Guid? UserInfoId { get; set; }
 
         
 
