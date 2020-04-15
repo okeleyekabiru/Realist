@@ -237,5 +237,44 @@ namespace Realist.Api.Controllers
 
             return BadRequest(new {Error = result});
         }
+        [HttpGet("category")]
+        public ActionResult PostCategory([FromQuery]PaginationModel page)
+        {
+            PagedList<Post> posts;
+            List<PostViewModel> newModel;
+            try
+            {
+                if ((page.Category < 1 || page.Category > 2)  ||( page.SubCategory < 0 || page.SubCategory > 5))
+                {
+                    return BadRequest(new {Error = "Invalid category or subcategory"});
+                }
+
+                 posts = _postContext.GetPostByCategory(page);
+                 if (posts.Count < 1 || posts == null)
+                 {
+                     return NoContent();
+                 }
+                 var metadata = new
+                 {
+                     posts.TotalCount,
+                     posts.PageSize,
+                     posts.CurrentPage,
+                     posts.TotalPages,
+                     posts.HasNext,
+                     posts.HasPrevious
+                 };
+                newModel = _mapper.Map<List<Post>, List<PostViewModel>>(posts);
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            }
+            catch (Exception e)
+            {
+
+                _logger.LogError(e.InnerException?.ToString() ?? e.Message);
+                _mailService.SendMail(string.Empty, e.InnerException?.ToString() ?? e.Message, "error");
+                return StatusCode(500, "Internal server error");
+            }
+
+         return   Ok(newModel);
+        }
     }
 }

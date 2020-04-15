@@ -12,5 +12,6 @@ namespace Realist.Data.Infrastructure
         Task<Reply> Get(string replyId);
         Task<ReturnResult> Update(Reply reply);
        Task<bool> SaveChanges();
+       Task<ReturnResult> Delete(Reply reply);
    }
 }
