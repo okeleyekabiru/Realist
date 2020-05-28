@@ -15,6 +15,7 @@ namespace Realist.Data.Services
         public  virtual DbSet<Photo> Photos { get; set; }
         public  virtual  DbSet<Videos> Videos { get; set; }
         public  virtual  DbSet<UserInfo> UserInfo { get; set; }
+        public  virtual  DbSet<BotInfo> BotInfo { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options):base(options)
         {
@@ -28,35 +29,55 @@ namespace Realist.Data.Services
         {
             opt.HasKey(o => o.Id);
             opt.HasMany(o => o.Photo)
-                .WithOne().IsRequired()
+                .WithOne()
                 .HasForeignKey(r => r.UserId);
             opt.HasMany(o => o.Videos)
-                .WithOne().IsRequired()
+                .WithOne()
                 .HasForeignKey(r => r.UserId)
+               
                 ;
 
         });
         builder.Entity<Post>(opt =>
         {
             opt.HasKey(o => o.Id);
-            opt.HasMany(o => o.Comments).WithOne();
-            opt.HasOne(o => o.User).WithMany(o => o.Posts).IsRequired()
+            opt.HasMany(o => o.Comments)
+                .WithOne()
+                .HasForeignKey(e => e.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+            opt.HasOne(o => o.User).WithMany(o => o.Posts)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            opt.HasOne(o => o.UserInfo)
+                .WithOne()
+                .HasForeignKey<Post>(o => o.UserInfoId)
+                .OnDelete(DeleteBehavior.NoAction);
 
         });
         builder.Entity<Comment>(opt =>
         {
             opt.HasMany(o => o.Replies)
-                .WithOne().IsRequired()
+                .WithOne()
                 .HasForeignKey(r => r.CommentId)
                 .OnDelete(DeleteBehavior.Cascade);
+            opt.HasOne(o => o.UserInfo)
+                .WithOne()
+                .HasForeignKey<Comment>(o => o.UserInfoId)
+                .OnDelete(DeleteBehavior.NoAction);
         });
         builder.Entity<Reply>(opt =>
         {
             opt.HasOne(o => o.Comment)
                 .WithMany(o => o.Replies)
-                .HasForeignKey(r => r.CommentId);
+                .HasForeignKey(r => r.CommentId).OnDelete(DeleteBehavior.Cascade);
+            opt.HasMany(e => e.Replies).WithOne()
+                .HasForeignKey(e => e.ReplyId)
+                .OnDelete(DeleteBehavior.NoAction);
+            opt.HasOne(o => o.UserInfo)
+                .WithOne()
+                .HasForeignKey<Reply>(o => o.UserInfoId)
+                .OnDelete(DeleteBehavior.NoAction);
+
         });
         builder.Entity<UserInfo>(opt =>
         {
@@ -67,17 +88,16 @@ namespace Realist.Data.Services
         });
         builder.Entity<Post>(opt =>
         {
-            opt.HasMany<Photo>()
+            opt.HasMany(o => o.Photos)
+                .WithOne().HasForeignKey(r => r.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+            opt.HasMany(o => o.Videos)
                 .WithOne()
-                .HasForeignKey(r => r.PostId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .HasForeignKey(o => o.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
         });
-        builder.Entity<Post>(opt =>
-        {
-            opt.HasMany<Videos>()
-                .WithOne()
-                .HasForeignKey(r => r.PostId).OnDelete(DeleteBehavior.NoAction);
-        });
+     
         builder.Entity<Videos>(opt =>
         {
             opt.HasKey(o => o.Id);
@@ -92,6 +112,8 @@ namespace Realist.Data.Services
                 .OnDelete(DeleteBehavior.Cascade);
 
         });
+        builder.Entity<BotInfo>(opt => { opt.HasKey(o => o.Id); });
+       
         }
     }
 }

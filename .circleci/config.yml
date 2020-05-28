@@ -1,4 +1,6 @@
- version: 2.1
+
+version: 2.1
+
 
  orbs:
   win: circleci/windows@2.2.0
@@ -12,12 +14,13 @@
        - run: dotnet build
        - restore_cache:
           keys:
-       - run:
+
           name: "Install project dependencies"
           command: dotnet.exe restore
        - save_cache:
           paths:
             - circleci\.nuget\packages
+
        - run:
           name: "Run Build step"
           command: dotnet.exe publish -c Release -r win10-x64
@@ -26,4 +29,4 @@
            command: .\bin\Release\netcoreapp3.1\win10-x64\publish\realist.exe
        - store_artifacts:
           path: .\bin\Release\netcoreapp3.1\win10-x64\publish\realist.exe
-       
+   

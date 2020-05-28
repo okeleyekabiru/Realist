@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NLog.Targets;
 using Plugins;
+using Plugins.DeviceAuthentication;
 using Plugins.JwtHandler;
 using Plugins.Mail;
 using Realist.Api.ViewModels;
@@ -25,7 +27,7 @@ namespace Realist.Api.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IMailService _mailService;
         private readonly IMapper _mapper;
-
+        private readonly DeviceAuthentication _auth; 
         public UserController(IUser userContext, IPhotoAccessor photoAccessor, IPhoto photoContext,
             ILogger<UserController> logger,IMailService mailService,IMapper mapper)
         {
@@ -35,6 +37,7 @@ namespace Realist.Api.Controllers
             _logger = logger;
             _mailService = mailService;
             _mapper = mapper;
+            _auth = new DeviceAuthentication(new HttpContextAccessor());
        
         }
 
@@ -42,6 +45,7 @@ namespace Realist.Api.Controllers
 
         public async Task<ActionResult> Register([FromBody] UserModel user)
         {
+            
 
             if (!ModelState.IsValid)
             {
@@ -49,37 +53,33 @@ namespace Realist.Api.Controllers
                 return BadRequest(ModelState.ValidationState);
             }
 
-            JwtModel model;
+            Tuple<JwtModel,string> model;
             User users;
             try
             {
                 user.Email = user.Email.ToLower();
                 var verify = await _userContext.EmailExists(user.Email);
                 if (verify) return BadRequest(new {Email = "Email Already exist"});
-                users = new User
-                {
-                    Email = user.Email,
-                    UserName = user.UserName,
-                    Password = user.Password
-                };
-                model = await _userContext.RegisterUser(users);
+               
+                model = await _userContext.RegisterUser(user);
                 if (user.Photo != null)
                 {
                     var photo = _photoAccessor.AddPhoto(user.Photo);
 
                 var photoUpload = new Photo
                 {
-                    IsMain = !await _photoContext.FindUserImage(users.Id),
+                    IsMain = !await _photoContext.FindUserImage(model.Item2),
                     PublicId = photo.PublicId,
                     Url = photo.Url,
                     UploadTime = DateTime.Now,
-                    UserId = users.Id
+                    UserId = model.Item2
 
                 };
                
                 await _photoContext.UploadImageDb(photoUpload);
-                await _photoContext.SaveChanges();
+              
                 }
+                await _photoContext.SaveChanges();
 
             }
             catch (Exception e)
@@ -91,12 +91,12 @@ namespace Realist.Api.Controllers
 
             }
 
-            if (model.Error != null)
+            if (model.Item1.Error != null)
             {
-                return BadRequest(new { model.Error});
+                return BadRequest(new { model.Item1.Error});
             }
-            _mailService.VerifyEmail(user.Email,model.Code);
-            var newModel = _mapper.Map<JwtModel, UserReturnModel>(model);
+            _mailService.VerifyEmail(user.Email,model.Item1.Code);
+            var newModel = _mapper.Map<JwtModel, UserReturnModel>(model.Item1);
             return Ok(newModel);
         }
 

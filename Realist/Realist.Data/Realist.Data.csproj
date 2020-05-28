@@ -5,16 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200403140625_userInfo.cs" />
-    <Compile Remove="Migrations\20200403140625_userInfo.Designer.cs" />
-    <Compile Remove="Migrations\20200405140616_includevideo.cs" />
-    <Compile Remove="Migrations\20200405140616_includevideo.Designer.cs" />
-    <Compile Remove="Migrations\20200405140837_includevideo.cs" />
-    <Compile Remove="Migrations\20200405140837_includevideo.Designer.cs" />
-    <Compile Remove="Migrations\20200405141039_includevideo.cs" />
-    <Compile Remove="Migrations\20200405141039_includevideo.Designer.cs" />
-    <Compile Remove="Migrations\20200405142056_includevideo.cs" />
-    <Compile Remove="Migrations\20200405142056_includevideo.Designer.cs" />
+    <Compile Remove="Migrations\20200411114603_update-post.cs" />
+    <Compile Remove="Migrations\20200411114603_update-post.Designer.cs" />
+    <Compile Remove="Migrations\20200411115545_update-post.cs" />
+    <Compile Remove="Migrations\20200411115545_update-post.Designer.cs" />
+    <Compile Remove="Migrations\20200411115836_update-post.cs" />
+    <Compile Remove="Migrations\20200411115836_update-post.Designer.cs" />
+    <Compile Remove="Migrations\20200411123318_updatedelete.cs" />
+    <Compile Remove="Migrations\20200411123318_updatedelete.Designer.cs" />
+    <Compile Remove="Migrations\20200411123358_updatedelete.cs" />
+    <Compile Remove="Migrations\20200411123358_updatedelete.Designer.cs" />
+    <Compile Remove="Migrations\20200411131829_updatecommentunique.cs" />
+    <Compile Remove="Migrations\20200411131829_updatecommentunique.Designer.cs" />
+    <Compile Remove="Migrations\20200411131939_updatecommentunique.cs" />
+    <Compile Remove="Migrations\20200411131939_updatecommentunique.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +41,7 @@
     <PackageReference Include="NLog.Config" Version="4.7.0" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
+    <PackageReference Include="xunit.runners" Version="2.0.0" />
   </ItemGroup>
 
 </Project>

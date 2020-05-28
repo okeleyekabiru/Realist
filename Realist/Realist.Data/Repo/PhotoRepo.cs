@@ -18,14 +18,38 @@ namespace Realist.Data.Repo
         {
             _context = context;
         }
-        public async Task UploadImageDb(Photo photo)
+
+        public Task Delete(Photo photo)
         {
+            _context.Photos.Remove(photo);
+            return  Task.CompletedTask;
+        }
+
+        public async Task<Guid> UploadImageDb(Photo photo)
+        {
+            photo.Id = Guid.NewGuid();
+            photo.UploadTime = DateTime.Now;
             await _context.Photos.AddAsync(photo);
+            return photo.Id;
+        }
+
+        public async Task<Photo> FindPhotoId(string postId, string photoId)
+        {
+            return await _context.Photos.Where(r => r.PostId.Equals(Guid.Parse(postId)) && r.PublicId.Equals(photoId))
+                .FirstOrDefaultAsync();
         }
 
         public void DeleteImageFromDb(Photo photo)
         {
             _context.Photos.Remove(photo);
+        }
+
+        public Task Update(Photo photo)
+        {
+            _context.Attach(photo);
+            _context.Entry(photo).State = EntityState.Modified;
+            // _context.Update(photo);
+                return Task.CompletedTask;
         }
 
         public async Task<bool> SaveChanges()

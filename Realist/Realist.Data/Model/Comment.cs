@@ -16,7 +16,12 @@ namespace Realist.Data.Model
         public DateTime DatePosted { get; set; }
         public DateTime? Updated { get; set; }
        public  ICollection<Reply> Replies { get; set; }
+       public Guid PostId { get; set; }
        public string ReplyId { get; set; }
+       public User User { get; set; }
+       public string UserId { get; set; }
+       public UserInfo UserInfo { get; set; }
+       public Guid? UserInfoId { get; set; }
 
     }
 }

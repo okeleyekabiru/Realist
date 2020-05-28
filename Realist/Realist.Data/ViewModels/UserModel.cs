@@ -14,7 +14,6 @@ namespace Realist.Api.ViewModels
         [Required]
         public string Password { get; set; }
 
-        public string UserName { get; set; }
         public  IFormFile Photo { get; set; }
     }
 }

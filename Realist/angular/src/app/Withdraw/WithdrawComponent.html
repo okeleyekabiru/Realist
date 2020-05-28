@@ -1,0 +1,26 @@
+<div class="container mt-5">
+    <div class="d-flex justify-content-center mt-5">
+<form name="Withdraw-form"(submit)=OnSubmit(Amount)>
+    <div class="form-group">
+      <input type="text" class="form-control" [(ngModel)] = "Amount" id="Amount" aria-describedby="Amount-help" name="Amount" placeholder="Enter Amount">
+    </div>
+    <button type="submit" class="btn btn-primary ml-5">Submit</button>
+  </form></div>
+</div>
+<div class="container d-flex justify-content-center mt-5" *ngIf="Account" >
+    <div class="card  bg-primary" style="width: 18rem; ">
+        <div class="card-body  bg-primary text-white">
+          <h5 class="card-title  bg-primary text-white">Transaction</h5>
+          <p class="card-text">{{Amount}} as been debited from your account</p>
+        </div>
+        <ul class="list-group list-group-flush ">
+          <li class="list-group-item  bg-primary text-white">AccountNumber: {{Account.AccountNumber}}</li>
+          <li class="list-group-item  bg-primary text-white">Account type: {{Account.AccountType}}</li>
+          <li class="list-group-item  bg-primary text-white">Balance : {{Account.Balance}}</li>
+        </ul>
+        <div class="card-body">
+          <a routerLink="/cardverification" class="card-link text-white">perform another Transaction</a>
+        
+        </div>
+      </div>
+</div>

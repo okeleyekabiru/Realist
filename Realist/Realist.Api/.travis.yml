@@ -1,0 +1,8 @@
+﻿language: csharp
+solution: Realist.sln
+install:
+  - nuget restore Realist.sln
+  - nuget install xunit.runners -Version 2.0.0 -OutputDirectory testrunner
+script:
+  - msbuild /p:Configuration=Release Realist.sln
+  - mono ./testrunner/xunit.runners.2.0.0/tools/xunit.console.clr4.exe ./RealistTest/bin/Release/RealistTest.dll

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
+using DeviceDetectorNET.Results.Device;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,9 +23,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Plugins;
 using Plugins.Cloudinary;
+using Plugins.DeviceAuthentication;
 using Plugins.JwtHandler;
 using Plugins.Mail;
+using Plugins.Redis.Cache;
 using Plugins.Youtube;
+using Realist.Api.SignalR;
 using Realist.Data.Infrastructure;
 using Realist.Data.Model;
 using Realist.Data.Repo;
@@ -44,16 +49,28 @@ namespace Realist.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            
             // if any problem occur with autoMapper check here
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddAutoMapper(typeof(User),typeof(UserReturnModel));
+            services.AddAutoMapper(typeof(User),typeof(UserReturnModel),typeof(Post),typeof(Comment));
+            services.AddScoped<IPost, PostRepo>();
+            services.AddScoped<IComment, CommentRepo>();
+            services.AddScoped<IUserInfo, UserInfoRepo>();
+            services.AddScoped<IBot, BotRepo>();
+            services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
+
             services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("RealistConnection"));
 
             });
-            services.AddScoped<IMailService, EmailService>();
+            services.AddScoped<IReply,ReplyRepo>();
+            services.AddSignalR();
+            services.AddScoped<IDeviceAuth, DeviceAuthentication>();
+            services.AddTransient<IMailService, EmailService>();
             services.AddScoped<IUser, UserRepo>();
             services.AddScoped<IJwtSecurity, JwtGenrator>();
             services.AddIdentity<User, IdentityRole>(opt =>
@@ -68,7 +85,14 @@ namespace Realist.Api
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             services.AddScoped<IPhoto, PhotoRepo>();
             services.AddScoped<IYoutube, Youtube>();
+            services.AddScoped<IVideo, VideoRepo>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.AddScoped<IRedis, Redis>();
+            services.AddStackExchangeRedisCache(opt =>
+            {
+                opt.Configuration = "localhost:6379";
+
+            });
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("jwtHandler").Value));
             services.AddAuthentication(x =>
                 {
@@ -103,11 +127,12 @@ namespace Realist.Api
                 app.UseAuthentication();
                 app.UseRouting();
                 app.UseAuthorization();
-
+                app.UseDefaultFiles();
                 app.UseStaticFiles();
                 app.UseEndpoints(endpoints =>
                     {
-                        endpoints.MapControllers(); 
+                        endpoints.MapControllers();
+                        endpoints.MapHub<CommentHub>("/comment");
 
                     }
                

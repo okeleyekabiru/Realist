@@ -10,7 +10,6 @@ namespace Realist.Data.Model
         
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Password { get; set; }
         public string UserLocation { get; set; }
         public string UserIpHost { get; set; }
         public string BrowserName { get; set; }

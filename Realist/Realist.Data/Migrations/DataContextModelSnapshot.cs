@@ -150,6 +150,40 @@ namespace Realist.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Realist.Data.Model.BotInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Producer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProducerUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BotInfo");
+                });
+
             modelBuilder.Entity("Realist.Data.Model.Comment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -165,7 +199,7 @@ namespace Realist.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("PostId")
+                    b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ReplyId")
@@ -177,11 +211,18 @@ namespace Realist.Data.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<Guid?>("UserInfoId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserInfoId")
+                        .IsUnique()
+                        .HasFilter("[UserInfoId] IS NOT NULL");
 
                     b.ToTable("Comments");
                 });
@@ -198,11 +239,11 @@ namespace Realist.Data.Migrations
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PostId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("PublicId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("UploadTime")
                         .HasColumnType("datetime2");
@@ -211,14 +252,11 @@ namespace Realist.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
-
-                    b.HasIndex("PostId1");
 
                     b.HasIndex("UserId");
 
@@ -253,12 +291,18 @@ namespace Realist.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("UserInfoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserInfoId")
+                        .IsUnique()
+                        .HasFilter("[UserInfoId] IS NOT NULL");
 
                     b.ToTable("Posts");
                 });
@@ -281,12 +325,29 @@ namespace Realist.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("ReplyId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("UserInfoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CommentId");
+
+                    b.HasIndex("ReplyId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserInfoId")
+                        .IsUnique()
+                        .HasFilter("[UserInfoId] IS NOT NULL");
 
                     b.ToTable("Replies");
                 });
@@ -339,9 +400,6 @@ namespace Realist.Data.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -386,16 +444,28 @@ namespace Realist.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("BrowserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BrowserVersion")
+                    b.Property<string>("BrowserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DeviceImeI")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DeviceNAme")
+                    b.Property<string>("DeviceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OsName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OsPlatForm")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OsShortName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("OsSuccess")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OsVersion")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -420,27 +490,24 @@ namespace Realist.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DateUploaded")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PostId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("PublicId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
-
-                    b.HasIndex("PostId1");
 
                     b.HasIndex("UserId");
 
@@ -498,34 +565,42 @@ namespace Realist.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Realist.Data.Model.BotInfo", b =>
+                {
+                    b.HasOne("Realist.Data.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Realist.Data.Model.Comment", b =>
                 {
                     b.HasOne("Realist.Data.Model.Post", null)
                         .WithMany("Comments")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Realist.Data.Model.User", null)
+                    b.HasOne("Realist.Data.Model.User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId");
+
+                    b.HasOne("Realist.Data.Model.UserInfo", "UserInfo")
+                        .WithOne()
+                        .HasForeignKey("Realist.Data.Model.Comment", "UserInfoId")
+                        .OnDelete(DeleteBehavior.NoAction);
                 });
 
             modelBuilder.Entity("Realist.Data.Model.Photo", b =>
                 {
                     b.HasOne("Realist.Data.Model.Post", null)
-                        .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Realist.Data.Model.Post", null)
                         .WithMany("Photos")
-                        .HasForeignKey("PostId1");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Realist.Data.Model.User", null)
                         .WithMany("Photo")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Realist.Data.Model.Post", b =>
@@ -533,8 +608,12 @@ namespace Realist.Data.Migrations
                     b.HasOne("Realist.Data.Model.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Realist.Data.Model.UserInfo", "UserInfo")
+                        .WithOne()
+                        .HasForeignKey("Realist.Data.Model.Post", "UserInfoId")
+                        .OnDelete(DeleteBehavior.NoAction);
                 });
 
             modelBuilder.Entity("Realist.Data.Model.Reply", b =>
@@ -544,6 +623,20 @@ namespace Realist.Data.Migrations
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Realist.Data.Model.Reply", null)
+                        .WithMany("Replies")
+                        .HasForeignKey("ReplyId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Realist.Data.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("Realist.Data.Model.UserInfo", "UserInfo")
+                        .WithOne()
+                        .HasForeignKey("Realist.Data.Model.Reply", "UserInfoId")
+                        .OnDelete(DeleteBehavior.NoAction);
                 });
 
             modelBuilder.Entity("Realist.Data.Model.UserInfo", b =>
@@ -557,20 +650,14 @@ namespace Realist.Data.Migrations
             modelBuilder.Entity("Realist.Data.Model.Videos", b =>
                 {
                     b.HasOne("Realist.Data.Model.Post", null)
-                        .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Realist.Data.Model.Post", null)
                         .WithMany("Videos")
-                        .HasForeignKey("PostId1");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Realist.Data.Model.User", null)
                         .WithMany("Videos")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

@@ -149,8 +149,63 @@ namespace Plugins.Youtube
             return uploadVideoResult;
         }
 
+        public async Task<UploadVideoResult> UpdateVideo(string videoId, IFormFile videos, UploadViewModel uploadViewModel)
+        {
+
+            var filePath = "";
+            UserCredential credential;
+            using (var stream =
+                new FileStream(_env.WebRootPath + "/client_secrets.json", FileMode.Open, FileAccess.Read))
+            {
+                credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    GoogleClientSecrets.Load(stream).Secrets,
+                    // This OAuth 2.0 access scope allows an application to upload files to the
+                    // authenticated user's YouTube channel, but doesn't allow other types of access.
+                    new[] { YouTubeService.Scope.YoutubeUpload },
+                    "user",
+                    CancellationToken.None
+                );
+                var youtubeService = new YouTubeService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = Assembly.GetExecutingAssembly().GetName().Name
+                });
+
+                var video = new Video();
+                video.Snippet = new VideoSnippet();
+                video.Snippet.Title = uploadViewModel.Title;
+                video.Snippet.Description = uploadViewModel.Description;
+                video.Snippet.Tags = uploadViewModel.VideoTags;
+                video.Snippet.CategoryId =
+                    uploadViewModel
+                        .CategoryId; // See https://developers.google.com/youtube/v3/docs/videoCategories/list
+                video.Status = new VideoStatus();
+                video.Status.PrivacyStatus = "public"; // or "private" or "public"
+                filePath = CopyToFolder(videos); // Replace with path to actual movie file.
+
+                using (var fileStream = new FileStream(filePath, FileMode.Open))
+                {
+                    var videosInsertRequest =
+                        youtubeService.Videos.Insert(video, "snippet,status", fileStream, "video/*");
+                    videosInsertRequest.ProgressChanged += videosInsertRequest_ProgressChanged;
+                    videosInsertRequest.ResponseReceived += videosInsertRequest_ResponseReceived;
+
+                    await videosInsertRequest.UploadAsync();
+                    youtubeService.Videos.Delete(videoId);
+                }
+
+            }
+
+            DeleteFromFolder(filePath);
+            return new UploadVideoResult
+            {
+                VideoId = VideoId
+            };
+        }
+
         void videosInsertRequest_ProgressChanged(Google.Apis.Upload.IUploadProgress progress)
         {
+          
             switch (progress.Status)
             {
                 
@@ -172,10 +227,29 @@ namespace Plugins.Youtube
             Console.WriteLine("Video id '{0}' was successfully uploaded.", video.Id);
         }
 
-        public UploadVideoResult DeleteVideo(string id)
+        public async Task<bool> DeleteVideo(string id)
         {
-            throw new NotImplementedException();
-
+          
+            UserCredential credential;
+            using (var stream =
+                new FileStream(_env.WebRootPath + "/client_secrets.json", FileMode.Open, FileAccess.Read))
+            {
+                credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    GoogleClientSecrets.Load(stream).Secrets,
+                    // This OAuth 2.0 access scope allows an application to upload files to the
+                    // authenticated user's YouTube channel, but doesn't allow other types of access.
+                    new[] {YouTubeService.Scope.YoutubeUpload},
+                    "user",
+                    CancellationToken.None
+                );
+                var youtubeService = new YouTubeService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = Assembly.GetExecutingAssembly().GetName().Name
+                });
+              var result =  youtubeService.Videos.Delete(id);
+              return result.Id != null;
+            }
         }
 
         public string CopyToFolder(IFormFile video)
@@ -205,6 +279,8 @@ namespace Plugins.Youtube
                 File.Delete(path);
             }
         }
+
+       
 
         public async Task CreatePlayList()
         {
